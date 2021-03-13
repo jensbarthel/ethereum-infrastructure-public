@@ -1,0 +1,11 @@
+name: Update-EKS-Cluster
+
+on: repository_dispatch
+
+jobs:
+  create-cluster:
+    name: Create the EKS cluster named elmo
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v2
