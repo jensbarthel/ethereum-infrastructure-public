@@ -1,6 +1,6 @@
 name: Update-EKS-Cluster
 
-on: repository_dispatch
+on: workflow_dispatch
 
 jobs:
   create-cluster:
