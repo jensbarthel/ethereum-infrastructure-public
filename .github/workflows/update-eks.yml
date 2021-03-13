@@ -20,4 +20,4 @@ jobs:
       - name: Use eksctl
         uses: robatwave/github-action-eksctl@0.1.2
         with:
-          args: create cluster --config-file=./eksctl/cluster.yaml
+          args: create cluster --config-file=./provision/eksctl/cluster.yaml
