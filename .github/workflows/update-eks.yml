@@ -17,7 +17,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Create eks cluster via eks
+      - name: Use eksctl
         uses: robatwave/github-action-eksctl@0.1.2
+
+      - name: Create eks cluster via eks
         run: |
           eksctl create cluster --config-file=./eksctl/cluster.yaml

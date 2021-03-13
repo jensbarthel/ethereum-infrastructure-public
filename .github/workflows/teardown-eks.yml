@@ -17,7 +17,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Delete eks cluster via eks
+      - name: Use eksctl
         uses: robatwave/github-action-eksctl@0.1.2
+
+      - name: Delete eks cluster via eks
         run: |
           eksctl delete cluster --name elmo --wait
