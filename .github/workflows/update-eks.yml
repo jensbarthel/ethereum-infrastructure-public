@@ -19,4 +19,4 @@ jobs:
 
       - name: Create aws test bucket
         run:
-          aws s3 mr s3://generated-by-github
+          aws s3 mb s3://generated-by-github
