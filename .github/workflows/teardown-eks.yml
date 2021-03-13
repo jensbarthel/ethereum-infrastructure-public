@@ -1,10 +1,10 @@
-name: Update-EKS-Cluster
+name: Teardown-EKS-Cluster
 
 on: workflow_dispatch
 
 jobs:
-  create-cluster:
-    name: Create the EKS cluster named elmo
+  destroy-cluster:
+    name: Destroy the EKS cluster named elmo
     runs-on: ubuntu-latest
     steps:
       - name: checkout-code
