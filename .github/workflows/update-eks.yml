@@ -19,7 +19,6 @@ jobs:
 
       - name: Use eksctl
         uses: robatwave/github-action-eksctl@0.1.2
-
-      - name: Create eks cluster via eks
-        run: |
-          eksctl create cluster --config-file=./eksctl/cluster.yaml
+        with:
+          run: |
+            eksctl create cluster --config-file=./eksctl/cluster.yaml
