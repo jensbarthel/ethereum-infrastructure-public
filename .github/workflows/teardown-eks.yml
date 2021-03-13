@@ -20,4 +20,4 @@ jobs:
       - name: Delete eks cluster via eks
         uses: robatwave/github-action-eksctl@0.1.2
         with:
-          args: eksctl delete cluster --name elmo --wait
+          args: delete cluster --name elmo --wait
