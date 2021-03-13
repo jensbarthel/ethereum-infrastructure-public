@@ -21,3 +21,12 @@ jobs:
         uses: robatwave/github-action-eksctl@0.1.2
         with:
           args: create cluster --config-file=./provision/eksctl/cluster.yaml
+
+      - name: Create kubeconfig
+        run: |
+          aws eks update-kubeconfig --name elmo
+
+      - name: Create prysm namespace
+        uses: steebchen/kubectl@master
+        with:
+          args: create namespace prysm
