@@ -63,10 +63,14 @@ jobs:
 
       - name: Create Loadbalancer IAM Policy
         run: |
-          wget https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
-          aws iam create-policy \
-              --policy-name AWSLoadBalancerControllerIAMPolicy \
-              --policy-document file://iam_policy.json
+          if ! $(AWS_PAGER="" aws iam get-policy --policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy) &> /dev/null
+          then
+            wget https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
+            aws iam create-policy \
+                --policy-name AWSLoadBalancerControllerIAMPolicy \
+                --policy-document file://iam_policy.json
+          else
+            echo "Policy arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy already present. Skipping."
 
 #      - name: Create a IAM role and ServiceAccount for the Load Balancer controller
 #        run: |
