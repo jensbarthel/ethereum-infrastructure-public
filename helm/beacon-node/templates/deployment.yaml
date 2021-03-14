@@ -32,7 +32,7 @@ spec:
           image: {{ .Values.beaconNode.deployment.image.repository }}:{{ .Values.beaconNode.deployment.image.tag }}
           args:
             - "--config-file={{ .Values.beaconNode.deployment.nodeConfigDir }}/{{ .Values.beaconNode.deployment.nodeConfigName }}"
-            - "--accept"
+            - "--accept-terms-of-use"
             {{- if .Values.beaconNode.isTestNet }}
             - "--pyrmont"
             {{- end }}
