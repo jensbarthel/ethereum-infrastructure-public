@@ -41,14 +41,14 @@ jobs:
 
       - name: Delete all runtimes and loadbalancers
         run: |
-          kubectl delete all --all --all-namespaces
+          k delete deployment,pod,svc,ingress --all -n all
 
       - name: Download eksctl
         run: |
           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
           sudo mv /tmp/eksctl /usr/local/bin
 
-      - name: Delete fargate profiles
+      - name: Delete fargate profiles, iam identity mappings, iam service accounts
         run: |
           for resource in fargateprofile iamidentitymapping iamserviceaccount
           do
