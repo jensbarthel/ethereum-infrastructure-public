@@ -52,8 +52,8 @@ jobs:
         run: |
           eksctl delete iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --all --arn arn:aws:iam::514125260731:role/eksctl-${EKS_CLUSTER_NAME}-cluster-FargatePodExecutionRole-1L5QGIOR0YIC
           eksctl delete iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --all --arn arn:aws:iam::514125260731:user/jens
-          eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name fp-prysm
-          eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name fp-default
+          # eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name fp-prysm
+          # eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name fp-default
           eksctl delete iamserviceaccount --cluster ${EKS_CLUSTER_NAME} --arn arn:aws:iam::514125260731:role/eksctl-elmo-cluster-FargatePodExecutionRole-1L5QGIOR0YIC
           eksctl delete iamserviceaccount --cluster ${EKS_CLUSTER_NAME} --arn arn:aws:iam::514125260731:user/jens
 
