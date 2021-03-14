@@ -10,7 +10,7 @@ env:
 
 jobs:
   destroy-cluster:
-    name: Destroy the EKS cluster named {{ env.EKS_CLUSTER_NAME }}
+    name: Destroy the EKS cluster named ${{ env.EKS_CLUSTER_NAME }}
     runs-on: ubuntu-latest
     steps:
       - name: checkout-code

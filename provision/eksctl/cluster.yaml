@@ -5,6 +5,7 @@ kind: ClusterConfig
 metadata:
   name: elmo
   region: us-east-1
+  version: "1.19"
 
 cloudWatch:
   clusterLogging:
