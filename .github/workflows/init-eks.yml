@@ -14,7 +14,7 @@ env:
 
 jobs:
   initialize-cluster:
-    name: Initialize the EKS cluster named ${{ env.EKS_CLUSTER_NAME }}
+    name: Initialize the EKS cluster named elmo
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials
