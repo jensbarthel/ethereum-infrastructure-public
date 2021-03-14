@@ -1,6 +1,9 @@
 name: Init-EKS-Cluster
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/init-eks.yml']
 
 jobs:
   initialize-cluster:
