@@ -2,6 +2,9 @@ name: Teardown-EKS-Cluster
 
 on: workflow_dispatch
 
+env:
+  EKS_CLUSTER_NAME: elmo
+
 jobs:
   destroy-cluster:
     name: Destroy the EKS cluster named elmo
@@ -24,4 +27,4 @@ jobs:
 
       - name: Delete eks cluster via eks
         run: |
-          eksctl delete cluster --name elmo --wait
+          eksctl delete cluster --name ${EKS_CLUSTER_NAME} --wait

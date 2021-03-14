@@ -1,8 +1,5 @@
 name: Init-EKS-Cluster
 
-env:
-  EKS_CLUSTER_NAME: elmo
-
 on:
   workflow_dispatch:
   push:
