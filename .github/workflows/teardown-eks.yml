@@ -10,7 +10,7 @@ env:
 
 jobs:
   destroy-cluster:
-    name: Destroy the EKS cluster named elmo
+    name: Destroy the EKS cluster named {{ env.EKS_CLUSTER_NAME }}
     runs-on: ubuntu-latest
     steps:
       - name: checkout-code
@@ -47,14 +47,6 @@ jobs:
         run: |
           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
           sudo mv /tmp/eksctl /usr/local/bin
-
-      - name: Delete fargate profiles, iam identity mappings, iam service accounts
-        run: |
-          eksctl delete iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --all --arn arn:aws:iam::514125260731:role/eksctl-${EKS_CLUSTER_NAME}-cluster-FargatePodExecutionRole-1L5QGIOR0YIC
-          eksctl delete iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --all --arn arn:aws:iam::514125260731:user/jens
-          # eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name fp-prysm
-          # eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name fp-default
-          eksctl delete iamserviceaccount --cluster ${EKS_CLUSTER_NAME} --name aws-load-balancer-controller
 
       - name: Delete eks cluster via eksctl
         run: |
