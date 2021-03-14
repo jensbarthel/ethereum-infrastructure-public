@@ -41,7 +41,7 @@ jobs:
 
       - name: Delete all runtimes and loadbalancers
         run: |
-          k delete deployment,pod,svc,ingress --all -n all
+          kubectl delete deployment,pod,svc,ingress --all -n all
 
       - name: Download eksctl
         run: |
