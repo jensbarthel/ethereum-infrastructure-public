@@ -1,4 +1,4 @@
-datadir: ~/data
+datadir: /data
 rpc-host: 0.0.0.0
 monitoring-host: 0.0.0.0
 monitoring-port: 8080

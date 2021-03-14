@@ -14,8 +14,6 @@ spec:
       labels:
         {{- include "beacon-node.selectorLabels" . | nindent 8 }}
     spec:
-      securityContext:
-        {{- toYaml .Values.beaconNode.deployment.podSecurityContext | nindent 8 }}
       volumes:
 
       {{- if .Values.storage.useStorage }}
