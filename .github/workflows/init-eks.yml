@@ -56,11 +56,6 @@ jobs:
               --cluster ${EKS_CLUSTER_NAME} \
               --approve
 
-
-      - name: Echo Account ID
-        run: |
-          echo ${AWS_ACCOUNT_ID}
-
       - name: Create Loadbalancer IAM Policy
         env:
           POLICY_NAME: AWSLoadBalancerControllerIAMPolicy
