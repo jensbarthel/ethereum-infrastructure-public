@@ -6,6 +6,10 @@ metadata:
   name: elmo
   region: us-east-1
 
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
 fargateProfiles:
   - name: fp-default
     selectors:
