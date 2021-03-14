@@ -7,6 +7,7 @@ on:
 
 env:
   EKS_CLUSTER_NAME: elmo
+  AWS_ACCOUNT_ID: 514125260731
 
 jobs:
   initialize-cluster:
@@ -58,7 +59,7 @@ jobs:
 
       - name: Echo Account ID
         run: |
-          echo ${ACCOUNT_ID}
+          echo ${AWS_ACCOUNT_ID}
 
       - name: Create Loadbalancer IAM Policy
         run: |
