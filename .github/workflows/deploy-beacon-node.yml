@@ -36,7 +36,6 @@ jobs:
       - name: Install beacon node
         run: |
           helm upgrade -i \
-            --name beacon-node \
             --namespace prysm \
             -f helm/beacon-node/values.yaml \
             --set beaconNode.web3HttpProvider=${{ secrets.INFURA_GOERLI_GETH_ENDPOINT }} \
