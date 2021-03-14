@@ -4,6 +4,9 @@ on: workflow_dispatch
 
 env:
   EKS_CLUSTER_NAME: elmo
+  AWS_ACCOUNT_ID: 514125260731
+  AWS_REGION: us-east-1
+  LOAD_BALANCER_POLICY_NAME: AWSLoadBalancerControllerIAMPolicy
 
 jobs:
   destroy-cluster:
@@ -20,11 +23,45 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Create kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}
+
+      - name: Install helm
+        uses: azure/setup-helm@v1
+
+      - name: Delete all helm charts
+        run: |
+          for release in $(helm list -A | awk '{OFS=":"} (NR>1) {print $1, $2}')
+          do
+            IFS=":"
+            set -- $release
+            helm delete $1 -n $2 --wait
+          done
+
+      - name: Delete all runtimes and loadbalancers
+        run: |
+          kubectl delete all --all --all-namespaces
+
       - name: Download eksctl
         run: |
           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
           sudo mv /tmp/eksctl /usr/local/bin
 
+      - name: Delete fargate profiles
+        run: |
+          for resource in fargateprofile iamidentitymapping iamserviceaccount
+          do
+            for entry in $(eksctl get ${resource} --cluster ${EKS_CLUSTER_NAME} | awk '(NR>1) {print $1}' | uniq)
+            do
+              eksctl delete ${resource} --cluster ${EKS_CLUSTER_NAME} --name ${entry}
+            done
+          done
+
       - name: Delete eks cluster via eks
         run: |
           eksctl delete cluster --name ${EKS_CLUSTER_NAME} --wait
+
+      - name: Delete Load Balancer controller IAM policy
+        run: |
+          aws iam delete-policy --policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/${LOAD_BALANCER_POLICY_NAME}
