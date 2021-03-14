@@ -87,7 +87,7 @@ jobs:
           helm repo add eks https://aws.github.io/eks-charts
           kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
 
-          export VPCID=$(aws cloudformation describe-stacks \                                                                                                                                                                                                                                                  ⬡ 13.9.0 [±master ✓]
+          export VPCID=$(aws cloudformation describe-stacks \
             --stack-name eksctl-${EKS_CLUSTER_NAME}-cluster \
             --query "Stacks[0].Outputs[?OutputKey=='VPC'].OutputValue" \
             --output text)
