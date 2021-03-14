@@ -1,15 +1,12 @@
-name: Update-EKS-Cluster
+name: Init-EKS-Cluster
 
 on: workflow_dispatch
 
 jobs:
   create-cluster:
-    name: Create the EKS cluster named elmo
+    name: Initialize the EKS cluster named elmo
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code base
-        uses: actions/checkout@v2
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -17,16 +14,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Create eks cluster via eks
+      - name: Add identity mapping for core user
         uses: robatwave/github-action-eksctl@0.1.2
         with:
-          args: create cluster --config-file=./provision/eksctl/cluster.yaml
+          args: create iamidentitymapping --cluster  elmo --arn arn:aws:iam::514125260731:user/jens --group system:masters --username admin
 
       - name: Create kubeconfig
         run: |
           aws eks update-kubeconfig --name elmo
 
-      - name: Create prysm namespace
-        uses: steebchen/kubectl@master
-        with:
-          args: create namespace prysm
+#      - name: Create prysm namespace
+#        uses: steebchen/kubectl@master
+#        with:
+#          args: create namespace prysm
