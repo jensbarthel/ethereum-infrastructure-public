@@ -48,10 +48,30 @@ jobs:
           kubectl create namespace prysm --dry-run=client -o yaml | kubectl apply -f -
           kubectl config set-context --current --namespace prysm
 
-      - name: Create IAM OIDC provider
+      - name: Create IAM OIDC provider for Loadbalancer
         run: |
           eksctl utils associate-iam-oidc-provider \
               --region ${AWS_REGION} \
               --cluster ${EKS_CLUSTER_NAME} \
               --approve
 
+
+      - name: Echo Account ID
+        run: |
+          echo ${ACCOUNT_ID}
+
+      - name: Create Loadbalancer IAM Policy
+        run: |
+          aws iam create-policy \
+              --policy-name AWSLoadBalancerControllerIAMPolicy \
+              --policy-document https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
+
+#      - name: Create a IAM role and ServiceAccount for the Load Balancer controller
+#        run: |
+#          eksctl create iamserviceaccount \
+#            --cluster ${EKS_CLUSTER_NAME} \
+#            --namespace kube-system \
+#            --name aws-load-balancer-controller \
+#            --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
+#            --override-existing-serviceaccounts \
+#            --approve
