@@ -2,6 +2,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 beaconNode:
+  isTestNet: true
   web3HttpProvider: "https://goerli.prylabs.net"
   p2pHostDns: ""
   deployment:
@@ -11,9 +12,9 @@ beaconNode:
       runAsGroup: 101
       fsGroup: 101
     image:
-      repository: "eth2spectrum/prysm-beacon-chain-arm64"
+      repository: "gcr.io/prysmaticlabs/prysm/beacon-chain"
       pullPolicy: Always
-      tag: "v1.0.0-alpha.23"
+      tag: "stable"
     nodeConfigDir: "/config"
     nodeConfigName: "beacon.yaml"
     dataDir: "/data"
@@ -40,5 +41,12 @@ ports:
   grpc: 4000
   metrics: 8080
 
-storageClassName: microk8s-hostpath
-serviceType: ClusterIP
+storage:
+  useStorage: false
+  className: microk8s-hostpath
+
+service:
+  useTcp: false
+  useUdp: false
+  type: ClusterIP
+

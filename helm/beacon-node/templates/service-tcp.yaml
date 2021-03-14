@@ -1,3 +1,4 @@
+{{- if .Values.service.useTcp }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -5,7 +6,7 @@ metadata:
   labels:
   {{- include "beacon-node.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.serviceType }}
+  type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.ports.p2pTcp }}
       targetPort: {{ .Values.ports.p2pTcp }}
@@ -14,3 +15,4 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "beacon-node.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

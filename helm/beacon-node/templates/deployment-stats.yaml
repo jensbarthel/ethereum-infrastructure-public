@@ -16,10 +16,14 @@ spec:
       labels:
         {{- include "beacon-node.selectorLabels" . | nindent 8 }}
     spec:
+
+      {{- if .Values.storage.useStorage }}
       volumes:
       - name: stats-data
         persistentVolumeClaim:
           claimName: {{ include "beacon-node.fullname" . }}-stats
+      {{- end }}
+
       containers:
       - name: {{ include "beacon-node.fullname" . }}-stats
         image: {{ .Values.stats.deployment.image.repository }}:{{ .Values.stats.deployment.image.tag }}
@@ -33,6 +37,9 @@ spec:
           - "--beacon.type={{ .Values.stats.deployment.beaconType }}"
           - "--beacon.addr={{ include "beacon-node.fullname" . }}-grcp:{{ .Values.ports.grpc }}"
           - "--beacon.metrics-addr=http://{{ include "beacon-node.fullname" . }}-metrics:{{ .Values.ports.metrics }}/metrics"
+
+        {{- if .Values.storage.useStorage }}
         volumeMounts:
         - mountPath: {{ .Values.stats.deployment.dataPath }}
           name: stats-data
+        {{- end }}
