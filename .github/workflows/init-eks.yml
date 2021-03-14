@@ -5,6 +5,9 @@ on:
   push:
     paths: ['.github/workflows/init-eks.yml']
 
+env:
+  EKS_CLUSTER_NAME: elmo
+
 jobs:
   initialize-cluster:
     name: Initialize the EKS cluster named elmo
