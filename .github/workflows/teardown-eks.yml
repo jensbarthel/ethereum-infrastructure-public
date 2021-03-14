@@ -50,18 +50,11 @@ jobs:
 
       - name: Delete fargate profiles, iam identity mappings, iam service accounts
         run: |
-#          This seems to work in the console but not in the action
-#          for resource in fargateprofile iamidentitymapping iamserviceaccount; do
-#              for entry in $(eksctl get ${resource} --cluster ${EKS_CLUSTER_NAME} | awk '(NR>1) {print $1}' | uniq); do
-#                  eksctl delete ${resource} --cluster ${EKS_CLUSTER_NAME} --name ${entry}
-#              done
-#          done
           eksctl delete iamidentitymapping --cluster ${EKS_CLUSTER_NAME} --all
           eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name prysm
           eksctl delete fargateprofile --cluster ${EKS_CLUSTER_NAME} --name fp-default
           eksctl delete iamserviceaccount --cluster elmo --name arn:aws:iam::514125260731:role/eksctl-elmo-cluster-FargatePodExecutionRole-1L5QGIOR0YIC
           eksctl delete iamserviceaccount --cluster elmo --name arn:aws:iam::514125260731:user/jens
-
 
       - name: Delete eks cluster via eksctl
         run: |
