@@ -61,5 +61,5 @@ spec:
               memory: "8Gi"
               cpu: "4"
             limits:
-              memory: "12Gi"
+              memory: "8Gi"
               cpu: "4"
