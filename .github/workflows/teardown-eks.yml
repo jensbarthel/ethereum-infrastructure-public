@@ -58,7 +58,7 @@ jobs:
             done
           done
 
-      - name: Delete eks cluster via eks
+      - name: Delete eks cluster via eksctl
         run: |
           eksctl delete cluster --name ${EKS_CLUSTER_NAME} --wait
 
