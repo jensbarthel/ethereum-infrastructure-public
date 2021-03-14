@@ -23,26 +23,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Create kubeconfig
-        run: |
-          aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}
-
-      - name: Install helm
-        uses: azure/setup-helm@v1
-
-      - name: Delete all helm charts
-        run: |
-          for release in $(helm list -A | awk '{OFS=":"} (NR>1) {print $1, $2}')
-          do
-            IFS=":"
-            set -- $release
-            helm delete $1 -n $2
-          done
-
-      - name: Delete all runtimes and loadbalancers
-        run: |
-          kubectl delete deployment,pod,svc,ingress --all -n all
-
       - name: Download eksctl
         run: |
           curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
