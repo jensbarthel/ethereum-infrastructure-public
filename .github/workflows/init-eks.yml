@@ -71,6 +71,7 @@ jobs:
                 --policy-document file://iam_policy.json
           else
             echo "Policy arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy already present. Skipping."
+          fi
 
 #      - name: Create a IAM role and ServiceAccount for the Load Balancer controller
 #        run: |
