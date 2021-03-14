@@ -1,5 +1,8 @@
 name: Init-EKS-Cluster
 
+env:
+  EKS_CLUSTER_NAME: elmo
+
 on:
   workflow_dispatch:
   push:
@@ -31,14 +34,14 @@ jobs:
       - name: Add identity mapping for admin user
         run: |
           eksctl create iamidentitymapping \
-            --cluster  elmo \
+            --cluster  ${EKS_CLUSTER_NAME} \
             --arn arn:aws:iam::514125260731:user/jens \
             --group system:masters \
             --username admin
 
       - name: Create kubeconfig
         run: |
-          aws eks update-kubeconfig --name elmo
+          aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}
 
       - name: Create and use prysm namespace
         run: |
@@ -49,6 +52,6 @@ jobs:
         run: |
           eksctl utils associate-iam-oidc-provider \
               --region ${AWS_REGION} \
-              --cluster eksworkshop-eksctl \
+              --cluster ${EKS_CLUSTER_NAME} \
               --approve
 
