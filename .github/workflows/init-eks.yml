@@ -13,6 +13,8 @@ jobs:
   initialize-cluster:
     name: Initialize the EKS cluster named elmo
     runs-on: ubuntu-latest
+    env:
+      LOAD_BALANCER_POLICY_NAME: AWSLoadBalancerControllerIAMPolicy
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -56,26 +58,24 @@ jobs:
               --cluster ${EKS_CLUSTER_NAME} \
               --approve
 
-      - name: Create Loadbalancer IAM Policy
-        env:
-          POLICY_NAME: AWSLoadBalancerControllerIAMPolicy
+      - name: Create Loadbalancer IAM Policy if not present
         run: |
-          if ! $(AWS_PAGER="" aws iam get-policy --policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/${POLICY_NAME} &> /dev/null)
+          if ! $(AWS_PAGER="" aws iam get-policy --policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/${LOAD_BALANCER_POLICY_NAME} &> /dev/null)
           then
             wget https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
             aws iam create-policy \
-                --policy-name ${POLICY_NAME} \
+                --policy-name ${LOAD_BALANCER_POLICY_NAME} \
                 --policy-document file://iam_policy.json
           else
             echo "Policy arn:aws:iam::${AWS_ACCOUNT_ID}:policy/${POLICY_NAME} already present. Skipping."
           fi
 
-#      - name: Create a IAM role and ServiceAccount for the Load Balancer controller
-#        run: |
-#          eksctl create iamserviceaccount \
-#            --cluster ${EKS_CLUSTER_NAME} \
-#            --namespace kube-system \
-#            --name aws-load-balancer-controller \
-#            --attach-policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
-#            --override-existing-serviceaccounts \
-#            --approve
+      - name: Create a IAM role and ServiceAccount for the Load Balancer controller
+        run: |
+          eksctl create iamserviceaccount \
+            --cluster ${EKS_CLUSTER_NAME} \
+            --namespace kube-system \
+            --name aws-load-balancer-controller \
+            --attach-policy-arn arn:aws:iam::${AWS_ACCOUNT_ID}:policy/${LOAD_BALANCER_POLICY_NAME} \
+            --override-existing-serviceaccounts \
+            --approve
