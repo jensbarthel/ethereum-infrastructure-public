@@ -56,3 +56,10 @@ spec:
           - name: configfile
             mountPath: {{ .Values.beaconNode.deployment.nodeConfigDir }}
             readOnly: true
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1"
+            limits:
+              memory: "4Mi"
+              cpu: "2"
