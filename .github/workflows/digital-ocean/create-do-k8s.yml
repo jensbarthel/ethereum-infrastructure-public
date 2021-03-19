@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   create-cluster:
-    name: Create the EKS cluster named elmo
+    name: Create the Digital Ocean cluster named elmo
     runs-on: ubuntu-latest
     steps:
       - name: Install doctl
