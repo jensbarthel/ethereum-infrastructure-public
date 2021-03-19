@@ -1,28 +1,21 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "beacon-node.fullname" . }}-stats
   labels:
   {{- include "beacon-node.statsLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.stats.deployment.replicaCount }}
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       {{- include "beacon-node.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "beacon-node.fullname" . }}-stats
+
   template:
     metadata:
       labels:
         {{- include "beacon-node.selectorLabels" . | nindent 8 }}
     spec:
-
-      {{- if .Values.storage.useStorage }}
-      volumes:
-      - name: stats-data
-        persistentVolumeClaim:
-          claimName: {{ include "beacon-node.fullname" . }}-stats
-      {{- end }}
 
       containers:
       - name: {{ include "beacon-node.fullname" . }}-stats
@@ -37,9 +30,16 @@ spec:
           - "--beacon.type={{ .Values.stats.deployment.beaconType }}"
           - "--beacon.addr={{ include "beacon-node.fullname" . }}-grcp:{{ .Values.ports.grpc }}"
           - "--beacon.metrics-addr=http://{{ include "beacon-node.fullname" . }}-metrics:{{ .Values.ports.metrics }}/metrics"
-
-        {{- if .Values.storage.useStorage }}
         volumeMounts:
-        - mountPath: {{ .Values.stats.deployment.dataPath }}
-          name: stats-data
-        {{- end }}
+        - mountPath: {{ .Values.stats.data.dir }}
+          name: {{ .Values.stats.data.pvcTemplateName }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.stats.data.pvcTemplateName }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.stats.data.pvcSize}}
+        storageClassName: {{ .Values.storage.className }}

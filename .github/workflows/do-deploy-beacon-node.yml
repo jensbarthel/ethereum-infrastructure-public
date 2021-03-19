@@ -1,0 +1,38 @@
+name: Deploy-Beacon-Node
+
+on:
+  workflow_dispatch:
+
+env:
+  CLUSTER_NAME: elmo
+  ETHEREUM_NAMESPACE: ethereum
+
+jobs:
+  deploy-node:
+    name: Deploy beacon node
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code base
+        uses: actions/checkout@v2
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+
+      - name: Install helm
+        uses: azure/setup-helm@v1
+
+      - name: Create kubeconfig
+        run: |
+          doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
+
+      - name: Install beacon node
+        run: |
+          helm upgrade \
+            beacon-node \
+            helm/beacon-node \
+            -i \
+            --namespace ${ETHEREUM_NAMESPACE} \
+            -f helm/beacon-node/values.yaml \
+            --set beaconNode.web3HttpProvider=${{ secrets.INFURA_GOERLI_GETH_ENDPOINT }} \
+            --debug

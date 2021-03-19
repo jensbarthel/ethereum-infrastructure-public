@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "beacon-node.fullname" . }}
   labels:
@@ -9,19 +9,14 @@ spec:
   selector:
     matchLabels:
       {{- include "beacon-node.selectorLabels" . | nindent 6 }}
+  serviceName: {{ .Chart.Name }}
+
   template:
     metadata:
       labels:
         {{- include "beacon-node.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
-
-      {{- if .Values.storage.useStorage }}
-      - name: node-data
-        persistentVolumeClaim:
-          claimName: {{ include "beacon-node.fullname" . }}
-      {{- end }}
-
       - name: configfile
         configMap:
           name: {{ include "beacon-node.fullname" . }}
@@ -47,19 +42,27 @@ spec:
               containerPort: {{ .Values.ports.metrics }}
               protocol: TCP
           volumeMounts:
+          - name: {{ .Values.beaconNode.data.pvcTemplateName }}
+            mountPath: {{ .Values.beaconNode.data.dir }}
 
-          {{- if .Values.storage.useStorage }}
-          - name: node-data
-            mountPath: {{ .Values.beaconNode.deployment.dataDir }}
-          {{- end }}
 
           - name: configfile
             mountPath: {{ .Values.beaconNode.deployment.nodeConfigDir }}
             readOnly: true
           resources:
             requests:
-              memory: "8Gi"
+              memory: "4Gi"
               cpu: "2"
             limits:
-              memory: "16Gi"
-              cpu: "4"
+              memory: "6Gi"
+              cpu: "3.5"
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.beaconNode.data.pvcTemplateName }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.beaconNode.data.pvcSize }}
+        storageClassName: {{ .Values.storage.className }}
