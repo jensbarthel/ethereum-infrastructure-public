@@ -9,7 +9,7 @@ env:
 
 jobs:
   deploy-node:
-    name: Deploy beacon node
+    name: Deploy beacon node to Digital Ocean
     runs-on: ubuntu-latest
 
     steps:
