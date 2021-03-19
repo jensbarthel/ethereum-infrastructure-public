@@ -18,7 +18,7 @@ jobs:
       - name: Create cluster
         run: |
           doctl kubernetes cluster create ${CLUSTER_NAME} \
-            --node-pool "name=${CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=2"
-            --region fra1
-            --version ${K8S_VERSION}
+            --node-pool "name=${CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=2" \
+            --region fra1 \
+            --version ${K8S_VERSION} \
             --wait
