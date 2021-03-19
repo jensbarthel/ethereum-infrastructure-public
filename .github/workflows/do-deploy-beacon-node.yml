@@ -1,4 +1,4 @@
-name: Deploy-Beacon-Node
+name: Deploy-DO-Beacon-Node
 
 on:
   workflow_dispatch:
