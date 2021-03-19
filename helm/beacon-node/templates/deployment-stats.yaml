@@ -24,7 +24,7 @@ spec:
         args:
           - "run"
           - "--eth2stats.node-name={{ .Values.stats.deployment.nodeName }}"
-          - "--data.folder={{ .Values.stats.deployment.dataPath }}"
+          - "--data.folder={{ .Values.stats.data.dir }}"
           - "--eth2stats.addr={{ .Values.stats.deployment.eth2StatsAddr }}"
           - "--eth2stats.tls={{ .Values.stats.deployment.eth2StatsTLS }}"
           - "--beacon.type={{ .Values.stats.deployment.beaconType }}"
