@@ -33,7 +33,7 @@ jobs:
 
       - name: Create kubeconfig
         run: |
-          doctl kubernetes cluster kubeconfig save ${EKS_CLUSTER_NAME}
+          doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
 
       - name: Create namespace ethereum
         run: |
