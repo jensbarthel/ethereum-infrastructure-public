@@ -24,9 +24,9 @@ jobs:
                         --region fra1 \
                         --version ${K8S_VERSION} \
                         --wait
-        else
-          echo "Cluster ${EKS_CLUSTER_NAME} already created"
-        fi
+          else
+            echo "Cluster ${EKS_CLUSTER_NAME} already created"
+          fi
 
       - name: Install kubectl
         uses: azure/setup-kubectl@v1
