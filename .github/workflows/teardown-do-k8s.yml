@@ -1,0 +1,21 @@
+name: Teardown-DO-Cluster
+
+on: workflow_dispatch
+
+env:
+  CLUSTER_NAME: elmo
+
+jobs:
+  create-cluster:
+    name: Destroy the Digital Ocean cluster
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
+      - name: Create cluster
+        run: |
+          doctl kubernetes cluster delete ${CLUSTER_NAME} \
+            --dangerous \
+            --force
