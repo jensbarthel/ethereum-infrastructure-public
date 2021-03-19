@@ -14,7 +14,7 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
-      - name: Create cluster
+      - name: Destroy cluster
         run: |
           doctl kubernetes cluster delete ${CLUSTER_NAME} \
             --dangerous \
