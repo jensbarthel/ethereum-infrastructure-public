@@ -18,7 +18,7 @@ jobs:
       - name: Create cluster
         run: |
           if ! $(doctl kubernetes cluster get ${EKS_CLUSTER_NAME} &> /dev/null); then
-            echo "Creating cluster ${EKS_CLUSTER_NAME}"
+            echo "Creating cluster ${CLUSTER_NAME}"
             doctl kubernetes cluster create ${CLUSTER_NAME} \
                         --node-pool "name=${CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=2" \
                         --region fra1 \
