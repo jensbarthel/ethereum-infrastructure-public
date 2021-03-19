@@ -30,7 +30,12 @@ jobs:
 
       - name: Delete eks cluster via eksctl
         run: |
-          eksctl delete cluster --name ${EKS_CLUSTER_NAME} --wait
+          if $(eksctl get clusters |grep ${EKS_CLUSTER_NAME} &> /dev/null); then
+            echo "Destroying cluster ${EKS_CLUSTER_NAME}"
+            eksctl delete cluster --name ${EKS_CLUSTER_NAME} --wait
+          else
+            echo "Cluster ${EKS_CLUSTER_NAME} not found"
+          fi
 
       - name: Delete Load Balancer controller IAM policy
         run: |
