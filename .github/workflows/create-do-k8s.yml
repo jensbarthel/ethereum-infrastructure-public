@@ -2,12 +2,22 @@ name: Create-DO-Cluster
 
 on: workflow_dispatch
 
+env:
+  CLUSTER_NAME: elmo
+  K8S_VERSION: 1.20.2-do.0
+
 jobs:
   create-cluster:
-    name: Create the Digital Ocean cluster named elmo
+    name: Create the Digital Ocean cluster
     runs-on: ubuntu-latest
     steps:
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
+      - name: Create cluster
+        run: |
+          eksctl kubernetes cluster create ${EKS_CLUSTER_NAME} \
+            --node-pool "name=${EKS_CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=2"
+            --region fra1
+            --version ${K8S_VERSION}
