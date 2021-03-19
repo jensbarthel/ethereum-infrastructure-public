@@ -17,8 +17,24 @@ jobs:
           token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
       - name: Create cluster
         run: |
-          doctl kubernetes cluster create ${CLUSTER_NAME} \
-            --node-pool "name=${CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=2" \
-            --region fra1 \
-            --version ${K8S_VERSION} \
-            --wait
+          if ! $(doctl kubernetes cluster get ${EKS_CLUSTER_NAME} &> /dev/null); then
+            echo "Creating cluster ${EKS_CLUSTER_NAME}"
+            doctl kubernetes cluster create ${CLUSTER_NAME} \
+                        --node-pool "name=${CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=2" \
+                        --region fra1 \
+                        --version ${K8S_VERSION} \
+                        --wait
+        else
+          echo "Cluster ${EKS_CLUSTER_NAME} already created"
+        fi
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+
+      - name: Create kubeconfig
+        run: |
+          doctl kubernetes cluster kubeconfig save ${EKS_CLUSTER_NAME}
+
+      - name: Create namespace ethereum
+        run: |
+          kubectl create namespace ethereum
