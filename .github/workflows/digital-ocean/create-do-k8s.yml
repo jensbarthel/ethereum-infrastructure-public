@@ -1,0 +1,13 @@
+name: Create-DO-Cluster
+
+on: workflow_dispatch
+
+jobs:
+  create-cluster:
+    name: Create the EKS cluster named elmo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
