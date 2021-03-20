@@ -80,5 +80,5 @@ jobs:
           helm upgrade cluster-issuer ${PROVISION_CHARTS_PATH}/cert-manager-resources \
             -i \
             --namespace ${CERT_MANAGER_NAMESPACE} \
-            --f ${PROVISION_CHARTS_PATH}/cert-manager-resources/values.yaml \
+            -f ${PROVISION_CHARTS_PATH}/cert-manager-resources/values.yaml \
             --set stage=qa
