@@ -2,6 +2,8 @@ name: Deploy-DO-Validator
 
 on:
   workflow_dispatch:
+  push:
+    paths: ['helm/validator']
 
 env:
   CLUSTER_NAME: elmo
