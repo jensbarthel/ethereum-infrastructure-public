@@ -33,6 +33,10 @@ grafana:
   listenPort: 3000
   serviceNameSuffix: grafana
   deployment:
+    podSecurityContext:
+      runAsUser: 472
+      runAsGroup: 472
+      fsGroup: 472
     replicaCount: 1
     image:
       repository: grafana/grafana

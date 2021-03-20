@@ -16,6 +16,8 @@ spec:
       labels:
     {{- include "monitoring.grafanaSelectorLabels" . | nindent 8 }}
     spec:
+      securityContext:
+      {{- toYaml .Values.grafana.deployment.podSecurityContext | nindent 8 }}
       volumes:
         - name: grafana-datasources-config
           configMap:
@@ -25,6 +27,8 @@ spec:
             name: {{ include "monitoring.fullname" . }}-grafana-dashboards
       initContainers:
         - name: "{{ include "monitoring.fullname" . }}-grafana-init"
+          securityContext:
+            runAsUser: 0
           image: "{{ .Values.grafana.deployment.image.repository }}"
           imagePullPolicy: {{ .Values.grafana.deployment.image.pullPolicy }}
           command:
