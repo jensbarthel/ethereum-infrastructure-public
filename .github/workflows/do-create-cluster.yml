@@ -8,7 +8,7 @@ env:
   ETHEREUM_NAMESPACE: ethereum
   INGRESS_NAMESPACE: nginx-ingress
   CERT_MANAGER_NAMESPACE: cert-manager
-
+  STAGE: qa
 jobs:
   create-cluster:
     name: Create the Digital Ocean cluster
@@ -76,10 +76,11 @@ jobs:
       - name: Install cluster issuer
         env:
           PROVISION_CHARTS_PATH: provision/digitalocean
+          EMAIL_ADDRESS: jens.barthel@gmail.com
         run: |
           helm upgrade cluster-issuer ${PROVISION_CHARTS_PATH}/cert-manager-resources \
             -i \
             --namespace ${CERT_MANAGER_NAMESPACE} \
             -f ${PROVISION_CHARTS_PATH}/cert-manager-resources/values.yaml \
-            --set stage=qa \
-            --set acme.emailAddress=jens.barthel@gmail.com
+            --set stage=${STAGE} \
+            --set acme.emailAddress=${EMAIL_ADDRESS}
