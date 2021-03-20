@@ -41,7 +41,8 @@ spec:
           image: {{ .Values.grafana.deployment.image.repository }}:{{ .Values.grafana.deployment.image.tag }}
           imagePullPolicy: {{ .Values.grafana.deployment.image.pullPolicy }}
           env:
-            - { name: GF_SECURITY_ADMIN_PASSWORD, value: "{{ .Values.grafana.deployment.adminPassword }}" }
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: "{{ .Values.grafana.deployment.adminPassword }}"
 
           ports:
             - name: grafana
