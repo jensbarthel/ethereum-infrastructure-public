@@ -46,7 +46,10 @@ spec:
           imagePullPolicy: {{ .Values.grafana.deployment.image.pullPolicy }}
           env:
             - name: GF_SECURITY_ADMIN_PASSWORD
-              value: "{{ .Values.grafana.deployment.adminPassword }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "monitoring.fullname" . }}-grafana
+                  key: "{{ .Values.grafana.secret.adminPasswordName }}"
 
           ports:
             - name: grafana

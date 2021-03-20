@@ -44,5 +44,5 @@ jobs:
             -i \
             --namespace ${ETHEREUM_NAMESPACE} \
             -f prysm/monitoring/values.yaml \
-            --set grafana.deployment.adminPassword=${{ secrets.GRAFANA_ADMIN_PASSWORD }} \
+            --set grafana.secret.adminPasswordValue=${{ secrets.GRAFANA_ADMIN_PASSWORD }} \
             --debug

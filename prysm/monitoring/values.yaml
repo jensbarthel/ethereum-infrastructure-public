@@ -42,7 +42,6 @@ grafana:
       repository: grafana/grafana
       tag: latest
       pullPolicy: Always
-    adminPassword: "overwrite-me"
     dataPath: "/var/lib/grafana"
     datasourcesPath: "/etc/grafana/provisioning/datasources"
     dashboardProvidersPath: "/etc/grafana/provisioning/dashboards"
@@ -54,6 +53,9 @@ grafana:
     size: 2Gi
   service:
     portName: grafana
+  secret:
+    adminPasswordName: "adminPassword"
+    adminPasswordValue: "overwrite-me"
   ingress:
     hostUrl: "eth2.sigdevops.io"
     backendPath: "/"
