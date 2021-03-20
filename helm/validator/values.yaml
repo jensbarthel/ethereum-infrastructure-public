@@ -4,9 +4,9 @@ fullnameOverride: ""
 deployment:
   replicaCount: 1
   image:
-    repository: "eth2spectrum/prysm-validator-arm64"
+    repository: "gcr.io/prysmaticlabs/prysm/validator"
     pullPolicy: Always
-    tag: "v1.0.0-alpha.23"
+    tag: "stable"
 
   healthEndpoint: "/healthz"
   configDir: "/config"
@@ -18,10 +18,14 @@ ports:
   metrics: 8080
 
 graffiti: ""
+
 wallet:
-  keymanagerOptsFileName: "keymanageropts.json"
-  accountsFilename: "all-accounts.keystore.json"
   walletDirectory: "/wallet"
   walletPassword: "<pass-as-parameter>"
-  walletPasswordPath: "/wallet/wallet-password"
+  walletPasswordFilePath: "/wallet/wallet-password"
   walletSecretSubPath: "wallet-password"
+  awsS3Init:
+    awsRegion: "us-east-1"
+    accessKeyId: "<pass-as-parameter>"
+    secretAccessKey: "<pass-as-parameter>"
+    walletPath: "<pass-as-parameter>"

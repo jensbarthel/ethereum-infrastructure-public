@@ -18,29 +18,31 @@ spec:
         - name: wallet-password
           secret:
             secretName: {{ include "validator.fullname" . }}
-        - name: wallet-accounts
-          configMap:
-            name: {{ include "validator.fullname" . }}
+      initContainers:
+        - name: amazon/aws-cli
+          command:
+            - "sh"
+            - "-c"
+            - "yum install -y tar"
+            - "&& mkdir {{ .Values.wallet.walletDirectory }}"
+            - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}"
+            - "&& tar -xvzpf {{ .Values.wallet.walletDirectory }}/*"
+            - "&& rm {{ .Values.wallet.walletDirectory }}/*.tar.gz"
       containers:
         - name: {{ .Chart.Name }}
           image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           args:
             - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"
             - "--wallet-dir={{ .Values.wallet.walletDirectory }}"
-            - "--wallet-password-file={{ .Values.wallet.walletPasswordPath }}"
+            - "--wallet-password-file={{ .Values.wallet.walletPasswordFilePath }}"
             - "--graffiti={{ .Values.graffiti }}"
             - "--monitoring-host=0.0.0.0"
             - "--monitoring-port={{ .Values.ports.metrics }}"
-          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+
           volumeMounts:
-            - name: wallet-accounts
-              mountPath: "{{ .Values.wallet.walletDirectory }}/direct/{{ .Values.wallet.keymanagerOptsFileName }}"
-              subPath: "{{ .Values.wallet.keymanagerOptsFileName }}"
-            - name: wallet-accounts
-              mountPath: "{{ .Values.wallet.walletDirectory }}/direct/accounts/{{ .Values.wallet.accountsFilename }}"
-              subPath: "{{ .Values.wallet.accountsFilename }}"
             - name: wallet-password
-              mountPath: {{ .Values.wallet.walletPasswordPath }}
+              mountPath: {{ .Values.wallet.walletPasswordFilePath }}
               subPath: {{ .Values.wallet.walletSecretSubPath}}
           livenessProbe:
             httpGet:
