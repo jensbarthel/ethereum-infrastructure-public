@@ -1,13 +1,24 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "monitoring.fullname" . }}-grafana
   labels: {{- include "monitoring.grafanaLabels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: {{ .Values.grafana.ingress.clusterIssuer }}
 spec:
+  tls:
+    - hosts:
+        - {{ .Values.grafana.ingress.hostUrl }}
+      secretName: hello-kubernetes-tls
   rules:
-    - http:
+    - host: {{ .Values.grafana.ingress.hostUrl }}
+      http:
         paths:
-          - path: {{ .Values.grafana.ingress.urlPath }}
+          - pathType: Prefix
+            path: {{ .Values.grafana.ingress.backendPath }}
             backend:
-              serviceName: {{ include "monitoring.fullname" . }}-grafana
-              servicePort: 3000
+              service:
+                name: {{ include "monitoring.fullname" . }}-grafana
+                port:
+                  name: {{ .Values.grafana.service.portName }}

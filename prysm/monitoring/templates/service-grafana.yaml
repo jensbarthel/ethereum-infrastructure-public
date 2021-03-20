@@ -8,6 +8,6 @@ spec:
     - port: {{ .Values.grafana.listenPort }}
       targetPort: {{ .Values.grafana.listenPort }}
       protocol: TCP
-      name: grafana
+      name: {{ .Values.grafana.service.portName }}
   selector:
     {{- include "monitoring.grafanaSelectorLabels" . | nindent 4 }}

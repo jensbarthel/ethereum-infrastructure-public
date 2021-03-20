@@ -26,6 +26,7 @@ prometheus:
   pvc:
     name: prometheus-pvc
     size: 10Gi
+
 grafana:
   persistentStorageSize: 1Gi
   listenPort: 3000
@@ -49,9 +50,12 @@ grafana:
   pvc:
     name: grafana-pvc
     size: 2Gi
-
+  service:
+    portName: grafana
   ingress:
-    urlPath: "/"
+    hostUrl: "eth2.sigdevops.io"
+    backendPath: "/"
+    clusterIssuer: cluster-issuer-cert-manager-resources-qa
 
 ports:
   metrics: 8080
