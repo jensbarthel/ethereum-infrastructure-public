@@ -1,4 +1,4 @@
-name: Deploy-DO-Beacon-Node
+name: Deploy-DO-Validator
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ env:
 
 jobs:
   deploy-node:
-    name: Deploy beacon node to Digital Ocean
+    name: Deploy validator to Digital Ocean
     runs-on: ubuntu-latest
 
     steps:
