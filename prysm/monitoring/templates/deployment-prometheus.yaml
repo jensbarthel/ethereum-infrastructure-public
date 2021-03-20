@@ -1,16 +1,15 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "monitoring.fullname" . }}-prometheus
   labels:
     {{- include "monitoring.prometheusLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.prometheus.deployment.replicaCount }}
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       {{- include "monitoring.prometheusSelectorLabels" . | nindent 6 }}
+  serviceName: {{ .Chart.Name }}
   template:
     metadata:
       labels:
@@ -19,9 +18,6 @@ spec:
       securityContext:
       {{- toYaml .Values.prometheus.deployment.podSecurityContext | nindent 8 }}
       volumes:
-        - name: prometheus-data
-          persistentVolumeClaim:
-            claimName: {{ include "monitoring.fullname" . }}-prometheus
         - name: prometheus-config
           configMap:
             name: {{ include "monitoring.fullname" . }}-prometheus
@@ -37,7 +33,17 @@ spec:
               containerPort: {{ .Values.prometheus.listenPort }}
               protocol: TCP
           volumeMounts:
-            - mountPath: {{ .Values.prometheus.dataPath }}
-              name: prometheus-data
-            - mountPath: {{ .Values.prometheus.configPath }}
-              name: prometheus-config
+            - name: {{ .Values.prometheus.pvc.name }}
+              mountPath: {{ .Values.prometheus.dataPath }}
+            - name: prometheus-config
+              mountPath: {{ .Values.prometheus.configPath }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.prometheus.pvc.name }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.prometheus.pvc.size }}
+        storageClassName: {{ .Values.storage.className }}

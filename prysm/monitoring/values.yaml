@@ -23,7 +23,9 @@ prometheus:
 
     healthEndpoint: "/healthz"
     beaconNode: beacon-node-grcp
-
+  pvc:
+    name: prometheus-pvc
+    size: 10Gi
 grafana:
   persistentStorageSize: 1Gi
   listenPort: 3000
@@ -37,12 +39,16 @@ grafana:
       repository: grafana/grafana
       tag: latest
       pullPolicy: Always
+
     dataPath: "/var/lib/grafana"
     datasourcesPath: "/etc/grafana/provisioning/datasources"
     dashboardProvidersPath: "/etc/grafana/provisioning/dashboards"
     dashboardsPath: "/var/lib/grafana/dashboards"
     dashboardBaseURL: "https://raw.githubusercontent.com/GuillaumeMiralles/prysm-grafana-dashboard/master/"
     dashboardFile: "less_10_validators.json"
+  pvc:
+    name: grafana-pvc
+    size: 2Gi
 
   ingress:
     urlPath: "/"
@@ -50,5 +56,5 @@ grafana:
 ports:
   metrics: 8080
 
-volumeClaim:
-  storageClassName: microk8s-hostpath
+storage:
+  className: do-block-storage

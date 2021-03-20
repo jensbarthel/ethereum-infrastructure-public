@@ -1,16 +1,16 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "monitoring.fullname" . }}-grafana
   labels:
     {{- include "monitoring.grafanaLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.grafana.deployment.replicaCount }}
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       {{- include "monitoring.grafanaSelectorLabels" . | nindent 6 }}
+  serviceName: {{ .Chart.Name }}
+
   template:
     metadata:
       labels:
@@ -19,9 +19,6 @@ spec:
       securityContext:
         {{- toYaml .Values.grafana.deployment.podSecurityContext | nindent 8 }}
       volumes:
-        - name: grafana-data
-          persistentVolumeClaim:
-            claimName: {{ include "monitoring.fullname" . }}-grafana
         - name: grafana-datasources-config
           configMap:
             name: {{ include "monitoring.fullname" . }}-grafana-datasources
@@ -51,9 +48,20 @@ spec:
               containerPort: {{ .Values.grafana.listenPort }}
               protocol: TCP
           volumeMounts:
-            - mountPath: {{ .Values.grafana.deployment.dataPath }}
-              name: grafana-data
-            - mountPath: {{ .Values.grafana.deployment.datasourcesPath }}
-              name: grafana-datasources-config
-            - mountPath: {{ .Values.grafana.deployment.dashboardProvidersPath }}
-              name: grafana-dashboard-config
+            - name: {{ .Values.grafana.pvc.name }}
+              mountPath: {{ .Values.grafana.deployment.dataPath }}
+            - name: grafana-datasources-config
+              mountPath: {{ .Values.grafana.deployment.datasourcesPath }}
+            - name: grafana-dashboard-config
+              mountPath: {{ .Values.grafana.deployment.dashboardProvidersPath }}
+
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.grafana.pvc.name }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.grafana.pvc.size }}
+        storageClassName: {{ .Values.storage.className }}
