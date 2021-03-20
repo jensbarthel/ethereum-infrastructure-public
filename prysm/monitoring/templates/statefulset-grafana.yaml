@@ -3,18 +3,18 @@ kind: StatefulSet
 metadata:
   name: {{ include "monitoring.fullname" . }}-grafana
   labels:
-    {{- include "monitoring.grafanaLabels" . | nindent 4 }}
+  {{- include "monitoring.grafanaLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.grafana.deployment.replicaCount }}
   selector:
     matchLabels:
-      {{- include "monitoring.grafanaSelectorLabels" . | nindent 6 }}
-  serviceName: {{ .Chart.Name }}-{{.Values.grafana.serviceNameSuffix}}
+  {{- include "monitoring.grafanaSelectorLabels" . | nindent 6 }}
+  serviceName: {{ .Chart.Name }}- {{.Values.grafana.serviceNameSuffix}}
 
   template:
     metadata:
       labels:
-        {{- include "monitoring.grafanaSelectorLabels" . | nindent 8 }}
+    {{- include "monitoring.grafanaSelectorLabels" . | nindent 8 }}
     spec:
       volumes:
         - name: grafana-datasources-config
@@ -27,11 +27,11 @@ spec:
         - name: "{{ include "monitoring.fullname" . }}-grafana-init"
           image: "{{ .Values.grafana.deployment.image.repository }}"
           imagePullPolicy: {{ .Values.grafana.deployment.image.pullPolicy }}
-          command: 
-          - bash
+          command:
+            - bash
           args:
-          - -c
-          - "mkdir -p {{ .Values.grafana.deployment.dashboardsPath }} ; wget {{ .Values.grafana.deployment.dashboardBaseURL }}/{{ .Values.grafana.deployment.dashboardFile }} -O {{ .Values.grafana.deployment.dashboardsPath }}/{{ .Values.grafana.deployment.dashboardFile }}"
+            - -c
+            - "mkdir -p {{ .Values.grafana.deployment.dashboardsPath }} ; wget {{ .Values.grafana.deployment.dashboardBaseURL }}/{{ .Values.grafana.deployment.dashboardFile }} -O {{ .Values.grafana.deployment.dashboardsPath }}/{{ .Values.grafana.deployment.dashboardFile }}"
           volumeMounts:
             - name: {{ .Values.grafana.pvc.name }}
               mountPath: {{ .Values.grafana.deployment.dataPath }}
@@ -41,7 +41,8 @@ spec:
           image: {{ .Values.grafana.deployment.image.repository }}:{{ .Values.grafana.deployment.image.tag }}
           imagePullPolicy: {{ .Values.grafana.deployment.image.pullPolicy }}
           env:
-            - name: GF_SECURITY_ADMIN_PASSWORD={{ .Values.grafana.deployment.adminPassword }}
+            - { name: GF_SECURITY_ADMIN_PASSWORD, value: "{{ .Values.grafana.deployment.adminPassword }}" }
+
           ports:
             - name: grafana
               containerPort: {{ .Values.grafana.listenPort }}
