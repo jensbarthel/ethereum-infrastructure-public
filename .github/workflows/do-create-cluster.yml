@@ -70,7 +70,8 @@ jobs:
             -i \
             --namespace ${CERT_MANAGER_NAMESPACE} \
             --version v1.2.0 \
-            --set installCRDs=true
+            --set installCRDs=true \
+            --wait
 
 
       - name: Install cluster issuer
