@@ -3,8 +3,8 @@ name: Deploy-DO-Validator
 on:
   push:
     paths:
-      - helm/validator/*
-      - helm/validator
+      - prysm/validator/*
+      - prysm/validator
   workflow_dispatch:
 
 
@@ -40,10 +40,10 @@ jobs:
         run: |
           helm upgrade \
             validator \
-            helm/validator \
+            prysm/validator \
             -i \
             --namespace ${ETHEREUM_NAMESPACE} \
-            -f helm/validator/values.yaml \
+            -f prysm/validator/values.yaml \
             --set wallet.walletPassword=${{ secrets.PRYSM_VALIDATOR_WALLET_PASSWORD }} \
             --set wallet.awsS3Init.accessKeyId=${{ secrets.AWS_ACCESS_KEY_ID }} \
             --set wallet.awsS3Init.secretAccessKey=${{ secrets.AWS_SECRET_ACCESS_KEY }} \

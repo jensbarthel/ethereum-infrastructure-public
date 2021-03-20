@@ -35,9 +35,9 @@ jobs:
         run: |
           helm upgrade \
             beacon-node \
-            helm/beacon-node \
+            prysm/beacon-node \
             -i \
             --namespace ${ETHEREUM_NAMESPACE} \
-            -f helm/beacon-node/values.yaml \
+            -f prysm/beacon-node/values.yaml \
             --set beaconNode.web3HttpProvider=${{ secrets.INFURA_GOERLI_GETH_ENDPOINT }} \
             --debug

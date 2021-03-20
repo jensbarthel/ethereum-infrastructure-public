@@ -7,6 +7,7 @@ env:
   K8S_VERSION: 1.20.2-do.0
   ETHEREUM_NAMESPACE: ethereum
   INGRESS_NAMESPACE: nginx-ingress
+  CERT_MANAGER_NAMESPACE: cert-manager
 
 jobs:
   create-cluster:
@@ -45,11 +46,25 @@ jobs:
       - name: Install helm
         uses: azure/setup-helm@v1
 
-      - name: Install nginx ingress controller
+      - name: Add necessary helm repos
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo add jetstack https://charts.jetstack.io
           helm repo update
+
+
+      - name: Install nginx ingress controller
+        run: |
           helm upgrade ${INGRESS_NAMESPACE} ingress-nginx/ingress-nginx \
             -i \
             --namespace nginx-ingress \
             --set controller.publishService.enabled=true
+
+      - name: Install cert manager name
+        run: |
+          kubectl create namespace ${CERT_MANAGER_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+          helm upgrade cert-manager jetstack/cert-manager \
+            -i \
+            --namespace cert-manager \
+            --version v1.2.0 \
+            --set installCRDs=true
