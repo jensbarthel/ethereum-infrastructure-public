@@ -42,9 +42,13 @@ jobs:
         run: |
           kubectl create namespace ${ETHEREUM_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
           kubectl create namespace ${INGRESS_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create namespace ${CERT_MANAGER_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Install helm
         uses: azure/setup-helm@v1
+
+      - name: Checkout code base
+        uses: actions/checkout@v2
 
       - name: Add necessary helm repos
         run: |
@@ -60,11 +64,21 @@ jobs:
             --namespace nginx-ingress \
             --set controller.publishService.enabled=true
 
-      - name: Install cert manager name
+      - name: Install cert manager
         run: |
-          kubectl create namespace ${CERT_MANAGER_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
           helm upgrade cert-manager jetstack/cert-manager \
             -i \
-            --namespace cert-manager \
+            --namespace ${CERT_MANAGER_NAMESPACE} \
             --version v1.2.0 \
             --set installCRDs=true
+
+
+      - name: Install cluster issuer
+        env:
+          PROVISION_CHARTS_PATH: provision/digitalocean
+        run: |
+          helm helm upgrade cluster-issuer ${PROVISION_CHARTS_PATH}/cert-manager-resources \
+            -i \
+            --namespace ${CERT_MANAGER_NAMESPACE} \
+            --f ${PROVISION_CHARTS_PATH}/cert-manager-resources/values.yaml \
+            --set stage=qa

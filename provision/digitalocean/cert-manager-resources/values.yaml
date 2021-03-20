@@ -1,0 +1,4 @@
+stage: "stage-id"
+acme:
+  emailAddress: "your_email_address"
+  server: "https://acme-v02.api.letsencrypt.org/directory"

@@ -33,9 +33,7 @@ jobs:
 
       - name: Install beacon node
         run: |
-          helm upgrade \
-            beacon-node \
-            prysm/beacon-node \
+          helm upgrade beacon-node prysm/beacon-node \
             -i \
             --namespace ${ETHEREUM_NAMESPACE} \
             -f prysm/beacon-node/values.yaml \
