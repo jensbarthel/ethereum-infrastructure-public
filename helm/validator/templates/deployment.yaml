@@ -24,8 +24,9 @@ spec:
         - name: "aws-cli"
           image: "amazon/aws-cli"
           volumeMounts:
-            - mountPath: "{{ .Values.wallet.walletDirectory }}"
-              name: "{{ .Values.wallet.walletVolumeName }}"
+            - name: "{{ .Values.wallet.walletVolumeName }}"
+              mountPath: "{{ .Values.wallet.walletDirectory }}"
+
           command:
             - "sh"
             - "-c"
@@ -58,7 +59,7 @@ spec:
               mountPath: {{ .Values.wallet.walletPasswordFilePath }}
               subPath: {{ .Values.wallet.walletSecretSubPath}}
             - name: {{ .Values.wallet.walletVolumeName }}
-            - mountPath: {{ .Values.wallet.walletDirectory }}
+              mountPath: {{ .Values.wallet.walletDirectory }}
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthEndpoint }}
