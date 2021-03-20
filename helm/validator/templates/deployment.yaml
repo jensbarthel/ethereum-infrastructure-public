@@ -18,14 +18,14 @@ spec:
         - name: wallet-password
           secret:
             secretName: {{ include "validator.fullname" . }}
-        - name: {{ .Values.wallet.walletVolumeName }}
+        - name: "{{ .Values.wallet.walletVolumeName }}"
           emptyDir: { }
       initContainers:
         - name: "aws-cli"
           image: "amazon/aws-cli"
           volumeMounts:
-            - mountPath: {{ .Values.wallet.walletDirectory }}
-              name:{{ .Values.wallet.walletVolumeName }}
+            - mountPath: "{{ .Values.wallet.walletDirectory }}"
+              name: "{{ .Values.wallet.walletVolumeName }}"
           command:
             - "sh"
             - "-c"
