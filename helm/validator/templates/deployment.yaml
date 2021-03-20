@@ -23,44 +23,34 @@ spec:
       initContainers:
         - name: "aws-cli"
           image: "amazon/aws-cli"
-          volumeMounts:
-            - name: {{ .Values.wallet.walletVolumeName }}
-              mountPath: {{ .Values.wallet.walletDirectory }}
+          volumeMounts: [ { name: {{ .Values.wallet.walletVolumeName }}, mountPath: {{ .Values.wallet.walletDirectory }} } ]
           env:
             - { name: AWS_DEFAULT_REGION, value: "{{ .Values.wallet.awsS3Init.awsRegion }}" }
             - { name: AWS_ACCESS_KEY_ID, value: "{{ .Values.wallet.awsS3Init.accessKeyId }}" }
             - { name: AWS_SECRET_ACCESS_KEY, value: "{{ .Values.wallet.awsS3Init.secretAccessKey }}" }
           command: [ "/bin/sh", "-c" ]
-          args:
-            - "aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }}"
+          args: ["aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }}"]
         - name: "alpine"
           image: "alpine"
-          volumeMounts:
-            - name: {{ .Values.wallet.walletVolumeName }}
-              mountPath: {{ .Values.wallet.walletDirectory }}
+          volumeMounts: [ { name: {{ .Values.wallet.walletVolumeName }}, mountPath: {{ .Values.wallet.walletDirectory }} } ]
           command: [ "/bin/sh", "-c" ]
-          args:
-            - "cd {{ .Values.wallet.walletDirectory }} && tar -xzpf {{ .Values.wallet.awsS3Init.walletFileName }} && rm {{ .Values.wallet.awsS3Init.walletFileName }}"
+          args: ["cd {{ .Values.wallet.walletDirectory }} && tar -xzpf {{ .Values.wallet.awsS3Init.walletFileName }} && rm {{ .Values.wallet.awsS3Init.walletFileName }}"]
 
       containers:
         - name: {{ .Chart.Name }}
-          image: busybox
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           args:
-            - sleep
-            - infinity
-          {{/*          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}*/}}
-          {{/*          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}*/}}
-          {{/*          args:*/}}
-          {{/*            - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"*/}}
-          {{/*            - "--wallet-dir={{ .Values.wallet.walletDirectory }}"*/}}
-          {{/*            - "--wallet-password-file={{ .Values.wallet.walletPasswordFilePath }}"*/}}
-          {{/*            - "--graffiti={{ .Values.graffiti }}"*/}}
-          {{/*            - "--monitoring-host=0.0.0.0"*/}}
-          {{/*            - "--monitoring-port={{ .Values.ports.metrics }}"*/}}
-          {{/*            - "--accept-terms-of-use"*/}}
-          {{/*            {{- if .Values.useTestnet}}*/}}
-          {{/*            - "--pyrmont"*/}}
-          {{/*            {{- end }}*/}}
+            - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"
+            - "--wallet-dir={{ .Values.wallet.walletDirectory }}"
+            - "--wallet-password-file={{ .Values.wallet.walletPasswordFilePath }}"
+            - "--graffiti={{ .Values.graffiti }}"
+            - "--monitoring-host=0.0.0.0"
+            - "--monitoring-port={{ .Values.ports.metrics }}"
+            - "--accept-terms-of-use"
+            {{- if .Values.useTestnet}}
+            - "--pyrmont"
+            {{- end }}
 
           volumeMounts:
             - name: wallet-password
