@@ -21,7 +21,7 @@ graffiti: ""
 useTestnet: true
 
 wallet:
-  walletVolumeName: "walletVolume"
+  walletVolumeName: "wallet-volume"
   walletDirectory: "/wallet"
   walletPassword: "<pass-as-parameter>"
   walletPasswordFilePath: "/wallet-password"
