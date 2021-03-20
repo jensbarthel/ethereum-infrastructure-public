@@ -1,0 +1,47 @@
+name: Deploy-DO-Monitoring
+
+on:
+  push:
+    paths:
+      - prysm/monitoring/*
+      - prysm/monitoring
+  workflow_dispatch:
+
+
+env:
+  CLUSTER_NAME: elmo
+  ETHEREUM_NAMESPACE: ethereum
+
+jobs:
+  deploy-node:
+    name: Deploy ethereum monitoring to Digital Ocean
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code base
+        uses: actions/checkout@v2
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+
+      - name: Install helm
+        uses: azure/setup-helm@v1
+
+      - name: Create kubeconfig
+        run: |
+          doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
+
+      - name: Install monitoring
+        run: |
+          helm upgrade \
+            monitoring \
+            prysm/monitoring \
+            -i \
+            --namespace ${ETHEREUM_NAMESPACE} \
+            -f prysm/monitoring/values.yaml \
+            --debug
