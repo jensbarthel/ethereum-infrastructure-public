@@ -30,6 +30,7 @@ spec:
             - "--pyrmont"
             {{- end }}
           imagePullPolicy: {{ .Values.beaconNode.deployment.image.pullPolicy }}
+
           ports:
             - containerPort: {{ .Values.ports.p2pTcp }}
               protocol: TCP
@@ -41,14 +42,14 @@ spec:
             - name: metrics
               containerPort: {{ .Values.ports.metrics }}
               protocol: TCP
+
           volumeMounts:
           - name: {{ .Values.beaconNode.data.pvcTemplateName }}
             mountPath: {{ .Values.beaconNode.data.dir }}
-
-
           - name: configfile
             mountPath: {{ .Values.beaconNode.deployment.nodeConfigDir }}
             readOnly: true
+
           resources:
             requests:
               memory: "4Gi"
