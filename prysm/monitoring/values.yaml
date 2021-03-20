@@ -33,16 +33,12 @@ grafana:
   listenPort: 3000
   serviceNameSuffix: grafana
   deployment:
-    podSecurityContext:
-      runAsUser: 472
-      runAsGroup: 472
-      fsGroup: 472
     replicaCount: 1
     image:
       repository: grafana/grafana
       tag: latest
       pullPolicy: Always
-
+    adminPassword: "overwrite-me"
     dataPath: "/var/lib/grafana"
     datasourcesPath: "/etc/grafana/provisioning/datasources"
     dashboardProvidersPath: "/etc/grafana/provisioning/dashboards"

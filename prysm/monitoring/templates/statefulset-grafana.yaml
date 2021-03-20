@@ -16,8 +16,6 @@ spec:
       labels:
         {{- include "monitoring.grafanaSelectorLabels" . | nindent 8 }}
     spec:
-      securityContext:
-        {{- toYaml .Values.grafana.deployment.podSecurityContext | nindent 8 }}
       volumes:
         - name: grafana-datasources-config
           configMap:
@@ -42,6 +40,8 @@ spec:
         - name: {{ include "monitoring.fullname" . }}-grafana
           image: {{ .Values.grafana.deployment.image.repository }}:{{ .Values.grafana.deployment.image.tag }}
           imagePullPolicy: {{ .Values.grafana.deployment.image.pullPolicy }}
+          env:
+            - name: GF_SECURITY_ADMIN_PASSWORD={{ .Values.grafana.deployment.adminPassword }}
           ports:
             - name: grafana
               containerPort: {{ .Values.grafana.listenPort }}
