@@ -21,9 +21,10 @@ graffiti: ""
 useTestnet: true
 
 wallet:
+  walletVolumeName: "wallet"
   walletDirectory: "/wallet"
   walletPassword: "<pass-as-parameter>"
-  walletPasswordFilePath: "/wallet/wallet-password"
+  walletPasswordFilePath: "/wallet-password"
   walletSecretSubPath: "wallet-password"
   awsS3Init:
     awsRegion: "us-east-1"

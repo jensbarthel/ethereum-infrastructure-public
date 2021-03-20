@@ -18,14 +18,18 @@ spec:
         - name: wallet-password
           secret:
             secretName: {{ include "validator.fullname" . }}
+        - name: {{ .Values.wallet.walletVolumeName }}
+          emptyDir: { }
       initContainers:
         - name: "aws-cli"
           image: "amazon/aws-cli"
+          volumeMounts:
+            - mountPath: {{ .Values.wallet.walletDirectory }}
+              name:{{ .Values.wallet.walletVolumeName }}
           command:
             - "sh"
             - "-c"
             - "yum install -y tar"
-            - "&& mkdir {{ .Values.wallet.walletDirectory }}"
             - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}"
             - "&& tar -xvzpf {{ .Values.wallet.walletDirectory }}/*"
             - "&& rm {{ .Values.wallet.walletDirectory }}/*.tar.gz"
@@ -35,24 +39,26 @@ spec:
           args:
             - sleep
             - infinity
-{{/*          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}*/}}
-{{/*          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}*/}}
-{{/*          args:*/}}
-{{/*            - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"*/}}
-{{/*            - "--wallet-dir={{ .Values.wallet.walletDirectory }}"*/}}
-{{/*            - "--wallet-password-file={{ .Values.wallet.walletPasswordFilePath }}"*/}}
-{{/*            - "--graffiti={{ .Values.graffiti }}"*/}}
-{{/*            - "--monitoring-host=0.0.0.0"*/}}
-{{/*            - "--monitoring-port={{ .Values.ports.metrics }}"*/}}
-{{/*            - "--accept-terms-of-use"*/}}
-{{/*            {{- if .Values.useTestnet}}*/}}
-{{/*            - "--pyrmont"*/}}
-{{/*            {{- end }}*/}}
+          {{/*          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}*/}}
+          {{/*          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}*/}}
+          {{/*          args:*/}}
+          {{/*            - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"*/}}
+          {{/*            - "--wallet-dir={{ .Values.wallet.walletDirectory }}"*/}}
+          {{/*            - "--wallet-password-file={{ .Values.wallet.walletPasswordFilePath }}"*/}}
+          {{/*            - "--graffiti={{ .Values.graffiti }}"*/}}
+          {{/*            - "--monitoring-host=0.0.0.0"*/}}
+          {{/*            - "--monitoring-port={{ .Values.ports.metrics }}"*/}}
+          {{/*            - "--accept-terms-of-use"*/}}
+          {{/*            {{- if .Values.useTestnet}}*/}}
+          {{/*            - "--pyrmont"*/}}
+          {{/*            {{- end }}*/}}
 
           volumeMounts:
             - name: wallet-password
               mountPath: {{ .Values.wallet.walletPasswordFilePath }}
               subPath: {{ .Values.wallet.walletSecretSubPath}}
+            - name: {{ .Values.wallet.walletVolumeName }}
+            - mountPath: {{ .Values.wallet.walletDirectory }}
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthEndpoint }}
