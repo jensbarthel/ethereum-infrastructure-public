@@ -19,14 +19,18 @@ spec:
           secret:
             secretName: {{ include "validator.fullname" . }}
         - name: {{ .Values.wallet.walletVolumeName }}
-          emptyDir: {}
+          emptyDir: { }
       initContainers:
         - name: "aws-cli"
           image: "amazon/aws-cli"
           volumeMounts:
             - name: {{ .Values.wallet.walletVolumeName }}
               mountPath: {{ .Values.wallet.walletDirectory }}
-          command: ["/bin/sh", "-c"]
+          env:
+            - { name: AWS_DEFAULT_REGION, value: "{{ .Values.wallet.awsS3Init.awsRegion }}" }
+            - { name: AWS_ACCESS_KEY_ID, value: "{{ .Values.wallet.awsS3Init.accessKeyId }}" }
+            - { name: AWS_SECRET_ACCESS_KEY, value: "{{ .Values.wallet.awsS3Init.secretAccessKey }}" }
+          command: [ "/bin/sh", "-c" ]
           args:
             - "aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/wallet.tar.gz"
 
