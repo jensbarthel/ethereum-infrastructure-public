@@ -81,4 +81,5 @@ jobs:
             -i \
             --namespace ${CERT_MANAGER_NAMESPACE} \
             -f ${PROVISION_CHARTS_PATH}/cert-manager-resources/values.yaml \
-            --set stage=qa
+            --set stage=qa \
+            --set acme.emailAddress=jens.barthel@gmail.com
