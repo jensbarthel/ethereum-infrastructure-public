@@ -12,6 +12,7 @@ spec:
   tls:
     - hosts:
         - "eth2.sigdevops.io"
+      secretName: hello-kubernetes-tls
   rules:
     - host: "eth2.sigdevops.io"
       http:
