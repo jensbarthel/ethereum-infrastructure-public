@@ -31,3 +31,4 @@ wallet:
     accessKeyId: "<pass-as-parameter>"
     secretAccessKey: "<pass-as-parameter>"
     walletPath: "<pass-as-parameter>"
+    walletFileName: "wallet.tar.gz"

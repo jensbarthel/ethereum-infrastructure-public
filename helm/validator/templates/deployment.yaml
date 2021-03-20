@@ -32,8 +32,14 @@ spec:
             - { name: AWS_SECRET_ACCESS_KEY, value: "{{ .Values.wallet.awsS3Init.secretAccessKey }}" }
           command: [ "/bin/sh", "-c" ]
           args:
-            - "aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/wallet.tar.gz"
-
+            - "aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }}"
+        - name: "alpine"
+          image: "alpine"
+          volumeMounts:
+            - name: {{ .Values.wallet.walletVolumeName }}
+              mountPath: {{ .Values.wallet.walletDirectory }}
+          command: [ "/bin/sh", "-c" ]
+          args: "tar -xzpf {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }} && rm {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }}"
       containers:
         - name: {{ .Chart.Name }}
           image: busybox
