@@ -77,7 +77,7 @@ jobs:
         env:
           PROVISION_CHARTS_PATH: provision/digitalocean
         run: |
-          helm helm upgrade cluster-issuer ${PROVISION_CHARTS_PATH}/cert-manager-resources \
+          helm upgrade cluster-issuer ${PROVISION_CHARTS_PATH}/cert-manager-resources \
             -i \
             --namespace ${CERT_MANAGER_NAMESPACE} \
             --f ${PROVISION_CHARTS_PATH}/cert-manager-resources/values.yaml \
