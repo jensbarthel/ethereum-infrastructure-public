@@ -26,15 +26,14 @@ spec:
           volumeMounts:
             - name: {{ .Values.wallet.walletVolumeName }}
               mountPath: {{ .Values.wallet.walletDirectory }}
-          command:
-            - "sh"
-            - "-c"
-            - "echo 'debug started' > /wallet/horst"
-            - "&& cd {{ .Values.wallet.walletDirectory }}"
-            - "&& echo Now working in ${PWD} >> /wallet/horst"
-            - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} wallet.tar.gz"
-            - "&& echo 'downloaded {{ .Values.wallet.awsS3Init.walletPath }}' >> /wallet/horst"
-            - "&& echo contents of current dir ${PWD} is $(ls)  >> /wallet/horst"
+          command: ["/bin/sh", "-c"]
+          args:
+            -  echo 'debug started' > /wallet/horst;
+               cd {{ .Values.wallet.walletDirectory }};
+               echo Now working in ${PWD} >> /wallet/horst;
+               aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} wallet.tar.gz;
+               echo 'downloaded {{ .Values.wallet.awsS3Init.walletPath }}' >> /wallet/horst;
+               echo contents of current dir ${PWD} is $(ls)  >> /wallet/horst;
 {{/*            - "&& tar -xvzpf {{ .Values.wallet.walletDirectory }}/wallet.tar.gz"*/}}
 {{/*            - "&& rm {{ .Values.wallet.walletDirectory }}/*.tar.gz"*/}}
       containers:
