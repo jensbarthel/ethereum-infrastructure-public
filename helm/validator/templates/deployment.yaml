@@ -26,8 +26,9 @@ spec:
           volumeMounts:
             - name: {{ .Values.wallet.walletVolumeName }}
               mountPath: {{ .Values.wallet.walletDirectory }}
+          command: ["/bin/sh", "-c"]
           args:
-            - "s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/wallet.tar.gz"
+            - "aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/wallet.tar.gz"
 
       containers:
         - name: {{ .Chart.Name }}
