@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "monitoring.prometheusSelectorLabels" . | nindent 6 }}
-  serviceName: {{ .Chart.Name }}
+  serviceName: {{ .Chart.Name }}-{{.Values.prometheus.serviceNameSuffix}}
   template:
     metadata:
       labels:

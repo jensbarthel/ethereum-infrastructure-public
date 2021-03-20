@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "monitoring.grafanaSelectorLabels" . | nindent 6 }}
-  serviceName: {{ .Chart.Name }}
+  serviceName: {{ .Chart.Name }}-{{.Values.grafana.serviceNameSuffix}}
 
   template:
     metadata:
@@ -37,8 +37,9 @@ spec:
           - -c
           - "mkdir -p {{ .Values.grafana.deployment.dashboardsPath }} ; wget {{ .Values.grafana.deployment.dashboardBaseURL }}/{{ .Values.grafana.deployment.dashboardFile }} -O {{ .Values.grafana.deployment.dashboardsPath }}/{{ .Values.grafana.deployment.dashboardFile }} ; chown -R grafana:grafana {{ .Values.grafana.deployment.dataPath }}"
           volumeMounts:
-            - mountPath: {{ .Values.grafana.deployment.dataPath }}
-              name: grafana-data
+            - name: {{ .Values.grafana.pvc.name }}
+              mountPath: {{ .Values.grafana.deployment.dataPath }}
+
       containers:
         - name: {{ include "monitoring.fullname" . }}-grafana
           image: {{ .Values.grafana.deployment.image.repository }}:{{ .Values.grafana.deployment.image.tag }}

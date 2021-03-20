@@ -10,6 +10,7 @@ prometheus:
   dataPath: "/prometheus"
   configPath: "/etc/prometheus"
 
+  serviceNameSuffix: prometheus
   deployment:
     replicaCount: 1
     podSecurityContext:
@@ -30,6 +31,7 @@ prometheus:
 grafana:
   persistentStorageSize: 1Gi
   listenPort: 3000
+  serviceNameSuffix: grafana
   deployment:
     podSecurityContext:
       runAsUser: 472
