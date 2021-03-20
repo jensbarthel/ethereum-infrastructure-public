@@ -18,20 +18,21 @@ spec:
         - name: wallet-password
           secret:
             secretName: {{ include "validator.fullname" . }}
-        - name: "{{ .Values.wallet.walletVolumeName }}"
-          emptyDir: { }
+        - name: {{ .Values.wallet.walletVolumeName }}
+          emptyDir: {}
       initContainers:
         - name: "aws-cli"
           image: "amazon/aws-cli"
           volumeMounts:
-            - name: "{{ .Values.wallet.walletVolumeName }}"
-              mountPath: "{{ .Values.wallet.walletDirectory }}"
+            - name: {{ .Values.wallet.walletVolumeName }}
+              mountPath: {{ .Values.wallet.walletDirectory }}
           command:
             - "sh"
             - "-c"
+            - "&& echo 'debug started' > /wallet/horst"
             - "yum install -y tar"
             - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}"
-            - "&& echo 'blub' > /wallet/horst"
+            - "&& echo 'debug ended' >> /wallet/horst"
             - "&& tar -xvzpf {{ .Values.wallet.walletDirectory }}/*"
 {{/*            - "&& rm {{ .Values.wallet.walletDirectory }}/*.tar.gz"*/}}
       containers:
