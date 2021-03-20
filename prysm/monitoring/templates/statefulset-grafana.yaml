@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
   {{- include "monitoring.grafanaSelectorLabels" . | nindent 6 }}
-  serviceName: {{ .Chart.Name }}- {{.Values.grafana.serviceNameSuffix}}
+  serviceName: {{ .Chart.Name }}-{{.Values.grafana.serviceNameSuffix}}
 
   template:
     metadata:
