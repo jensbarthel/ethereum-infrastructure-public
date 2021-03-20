@@ -18,6 +18,7 @@ ports:
   metrics: 8080
 
 graffiti: ""
+useTestnet: true
 
 wallet:
   walletDirectory: "/wallet"

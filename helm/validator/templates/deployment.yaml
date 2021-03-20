@@ -40,6 +40,10 @@ spec:
             - "--graffiti={{ .Values.graffiti }}"
             - "--monitoring-host=0.0.0.0"
             - "--monitoring-port={{ .Values.ports.metrics }}"
+            - "--accept-terms-of-use"
+            {{- if .Values.useTestnet}}
+            - "--pyrmont"
+            {{- end }}
 
           volumeMounts:
             - name: wallet-password
