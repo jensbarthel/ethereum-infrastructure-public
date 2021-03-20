@@ -35,10 +35,9 @@ jobs:
         run: |
           doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
 
-      - name: Create and use namespace ethereum
+      - name: Create namespace ethereum
         run: |
           kubectl create namespace ethereum --dry-run=client -o yaml | kubectl apply -f -
-          kubectl config set-context --current --namespace ethereum
 
       - name: Install helm
         uses: azure/setup-helm@v1
