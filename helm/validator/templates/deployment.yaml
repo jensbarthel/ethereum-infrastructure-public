@@ -29,8 +29,8 @@ spec:
           command:
             - "sh"
             - "-c"
-            - "&& echo 'debug started' > /wallet/horst"
-            - "yum install -y tar"
+            - "echo 'debug started' > /wallet/horst"
+            - "&& yum install -y tar"
             - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}"
             - "&& echo 'debug ended' >> /wallet/horst"
             - "&& tar -xvzpf {{ .Values.wallet.walletDirectory }}/*"
