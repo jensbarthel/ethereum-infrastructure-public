@@ -26,14 +26,14 @@ spec:
           volumeMounts:
             - name: "{{ .Values.wallet.walletVolumeName }}"
               mountPath: "{{ .Values.wallet.walletDirectory }}"
-
           command:
             - "sh"
             - "-c"
             - "yum install -y tar"
             - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}"
+            - "&& echo 'blub' > /wallet/horst"
             - "&& tar -xvzpf {{ .Values.wallet.walletDirectory }}/*"
-            - "&& rm {{ .Values.wallet.walletDirectory }}/*.tar.gz"
+{{/*            - "&& rm {{ .Values.wallet.walletDirectory }}/*.tar.gz"*/}}
       containers:
         - name: {{ .Chart.Name }}
           image: busybox
