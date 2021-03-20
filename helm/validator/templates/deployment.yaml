@@ -19,7 +19,8 @@ spec:
           secret:
             secretName: {{ include "validator.fullname" . }}
       initContainers:
-        - name: amazon/aws-cli
+        - name: "aws-cli"
+          image: "amazon/aws-cli"
           command:
             - "sh"
             - "-c"
