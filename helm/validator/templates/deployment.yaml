@@ -31,8 +31,12 @@ spec:
             - "-c"
             - "echo 'debug started' > /wallet/horst"
             - "&& yum install -y tar"
-            - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/wallet.tar.gz"
-            - "&& echo 'debug ended' >> /wallet/horst"
+            - "&& echo 'installed tar' >> /wallet/horst"
+            - "&& cd {{ .Values.wallet.walletDirectory }}"
+            - "&& echo Now working in ${PWD} >> /wallet/horst"
+            - "&& aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} wallet.tar.gz"
+            - "&& echo 'downloaded {{ .Values.wallet.awsS3Init.walletPath }}' >> /wallet/horst"
+            - "&& echo contents of current dir ${PWD} is $(ls)  >> /wallet/horst"
             - "&& tar -xvzpf {{ .Values.wallet.walletDirectory }}/wallet.tar.gz"
 {{/*            - "&& rm {{ .Values.wallet.walletDirectory }}/*.tar.gz"*/}}
       containers:
