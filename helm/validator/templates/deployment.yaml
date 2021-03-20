@@ -40,8 +40,8 @@ spec:
               mountPath: {{ .Values.wallet.walletDirectory }}
           command: [ "/bin/sh", "-c" ]
           args:
-            - "tar -xzpf {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }}"
-            - "rm {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }}"
+            - "cd {{ .Values.wallet.walletDirectory }} && tar -xzpf {{ .Values.wallet.awsS3Init.walletFileName }} && rm {{ .Values.wallet.awsS3Init.walletFileName }}"
+
       containers:
         - name: {{ .Chart.Name }}
           image: busybox
