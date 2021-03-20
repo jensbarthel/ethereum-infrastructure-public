@@ -35,6 +35,18 @@ jobs:
         run: |
           doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
 
-      - name: Create namespace ethereum
+      - name: Create and use namespace ethereum
         run: |
-          kubectl create namespace ethereum
+          kubectl create namespace ethereum --dry-run=client -o yaml | kubectl apply -f -
+          kubectl config set-context --current --namespace ethereum
+
+      - name: Install helm
+        uses: azure/setup-helm@v1
+
+      - name: Install nginx ingress controller
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo update
+          helm upgrade nginx-ingress ingress-nginx/ingress-nginx \
+            -i \
+            --set controller.publishService.enabled=true
