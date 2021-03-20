@@ -10,7 +10,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.grafana.ingress.hostUrl }}
-      secretName: hello-kubernetes-tls
+      secretName: {{ include "monitoring.fullname" . }}-grafana-tls
   rules:
     - host: {{ .Values.grafana.ingress.hostUrl }}
       http:
