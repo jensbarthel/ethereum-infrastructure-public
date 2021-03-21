@@ -18,9 +18,6 @@ spec:
         - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
           secret:
             secretName: {{ include "validator.fullname" . }}
-            items:
-              - key:
-                path:
         - name: {{ .Values.validator.wallet.walletVolumeName }}
           emptyDir: { }
 
