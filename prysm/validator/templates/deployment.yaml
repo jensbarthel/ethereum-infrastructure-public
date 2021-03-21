@@ -18,8 +18,12 @@ spec:
         - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
           secret:
             secretName: {{ include "validator.fullname" . }}
+            items:
+              - key:
+                path:
         - name: {{ .Values.validator.wallet.walletVolumeName }}
           emptyDir: { }
+
       initContainers:
         - name: "aws-cli"
           image: "amazon/aws-cli"
@@ -66,7 +70,10 @@ spec:
               mountPath: {{ .Values.validator.wallet.walletDirectory }}
             - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
               mountPath: {{ .Values.validator.wallet.walletPasswordFilePath }}
-              subPath: {{ .Values.validator.wallet.walletSecretSubPath}}
+              subPath: {{ .Values.validator.wallet.walletSecretName}}
+            - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
+              mountPath: {{ .Values.validator.wallet.walletDirectory }}
+              subPath: {{ .Values.validator.webUi.passwordHash.fileName }}
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthEndpoint }}

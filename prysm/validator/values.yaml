@@ -28,10 +28,10 @@ validator:
   webUi:
     activateWebUi: true
     passwordHash:
-    secretName: webUiPasswordHash
-    secretValue: "<pass-as-parameter>"
-    fileName: rpc-password-hash
-    filePath: /wallet
+      secretName: webUiPasswordHash
+      secretValue: "<pass-as-parameter>"
+      fileName: rpc-password-hash
+      filePath: /wallet
 
   wallet:
     walletVolumeName: "wallet-volume"
@@ -39,7 +39,7 @@ validator:
     walletPassword: "<pass-as-parameter>"
     walletPasswordFilePath: "/wallet-password"
     walletSecretVolumeName: "wallet-password"
-    walletSecretSubPath: "wallet-password"
+    walletSecretName: "wallet-password"
     awsS3Init:
       awsRegion: "us-east-1"
       accessKeyId: "<pass-as-parameter>"
