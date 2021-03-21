@@ -46,7 +46,7 @@ spec:
                   name: {{ include "validator.fullname" . }}
                   key: "{{ .Values.validator.webUi.passwordHash.secretKey }}"
           command: [ "/bin/sh", "-c" ]
-          args: [ "echo ${UI_PASSWORD_HASH} > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
+          args: [ "cd {{ .Values.validator.wallet.directory }} &&  echo horst > {{.Values.validator.webUi.passwordHash.fileName}}" ]
         {{ end }}
 
       containers:
