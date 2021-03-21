@@ -15,7 +15,7 @@ spec:
     {{- include "validator.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
-        - name: wallet-password
+        - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
           secret:
             secretName: {{ include "validator.fullname" . }}
         - name: {{ .Values.validator.wallet.walletVolumeName }}
@@ -47,24 +47,29 @@ spec:
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           args:
             - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"
+            - "--accept-terms-of-use"
             - "--wallet-dir={{ .Values.validator.wallet.walletDirectory }}"
             - "--wallet-password-file={{ .Values.validator.wallet.walletPasswordFilePath }}"
-            - "--graffiti={{ .Values.graffiti }}"
+            - "--graffiti={{ .Values.validator.graffiti }}"
             - "--monitoring-host=0.0.0.0"
             - "--monitoring-port={{ .Values.ports.metrics }}"
+            {{- if .Values.validator.webUi.activateWebUi }}
             - "--web"
             - "--grpc-gateway-host=0.0.0.0"
-            - "--accept-terms-of-use"
-            {{- if .Values.useTestnet}}
+            {{- end }}
+            {{- if .Values.validator.useTestnet }}
             - "--pyrmont"
             {{- end }}
 
           volumeMounts:
-            - name: wallet-password
-              mountPath: {{ .Values.validator.wallet.walletPasswordFilePath }}
-              subPath: {{ .Values.validator.wallet.walletSecretSubPath}}
             - name: {{ .Values.validator.wallet.walletVolumeName }}
               mountPath: {{ .Values.validator.wallet.walletDirectory }}
+            - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
+              mountPath: {{ .Values.validator.wallet.walletPasswordFilePath }}
+              subPath: {{ .Values.validator.wallet.walletSecretSubPath}}
+            - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
+              mountPath: {{ .Values.validator.wallet.walletDirectory }}
+              subPath: {{ .Values.validator.wallet.walletSecretSubPath}}
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthEndpoint }}

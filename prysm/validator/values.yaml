@@ -19,15 +19,26 @@ deployment:
 ports:
   metrics: 8080
 
-graffiti: ""
-useTestnet: true
+
 
 validator:
+  useTestnet: true
+  graffiti: ""
+
+  webUi:
+    activateWebUi: true
+    passwordHash:
+    secretName: webUiPasswordHash
+    secretValue: "<pass-as-parameter>"
+    fileName: rpc-password-hash
+    filePath: /wallet
+
   wallet:
     walletVolumeName: "wallet-volume"
     walletDirectory: "/wallet"
     walletPassword: "<pass-as-parameter>"
     walletPasswordFilePath: "/wallet-password"
+    walletSecretVolumeName: "wallet-password"
     walletSecretSubPath: "wallet-password"
     awsS3Init:
       awsRegion: "us-east-1"
