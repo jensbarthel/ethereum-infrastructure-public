@@ -18,13 +18,13 @@ spec:
         - name: {{ .Values.validator.wallet.secretVolumeName }}
           secret:
             secretName: {{ include "validator.fullname" . }}
-        - name: horst
+        - name: {{ .Values.validator.wallet.volumeName }}
           emptyDir: { }
 
       initContainers:
         - name: "download-wallet"
           image: "amazon/aws-cli"
-          volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
+          volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
           env:
             - { name: AWS_DEFAULT_REGION, value: "{{ .Values.validator.wallet.awsS3Init.awsRegion }}" }
             - { name: AWS_ACCESS_KEY_ID, value: "{{ .Values.validator.wallet.awsS3Init.accessKeyId }}" }
@@ -33,13 +33,13 @@ spec:
           args: [ "aws s3 cp {{ .Values.validator.wallet.awsS3Init.walletPath }} {{ .Values.validator.wallet.directory }}/{{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         - name: "untar-wallet"
           image: busybox
-          volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
+          volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
           args: [ "cd {{ .Values.validator.wallet.directory }} && tar -xzpf {{ .Values.validator.wallet.awsS3Init.walletFileName }} && rm {{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         {{ if .Values.validator.webUi.activateWebUi }}
         - name: "set-ui-pwhash"
           image: busybox
-          volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
+          volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
           args: [ "echo '{{ .Values.validator.webUi.passwordHash.secretValue }}' > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
       {{ end }}
@@ -73,7 +73,7 @@ spec:
             - name: {{ .Values.validator.wallet.secretVolumeName }}
               mountPath: {{ .Values.validator.wallet.passwordFilePath }}
               subPath: {{ .Values.validator.wallet.secretName }}
-            - name: horst
+            - name: {{ .Values.validator.wallet.volumeName }}
               mountPath: {{ .Values.validator.wallet.directory }}
           livenessProbe:
             httpGet:

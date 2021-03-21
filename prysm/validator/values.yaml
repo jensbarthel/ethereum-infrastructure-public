@@ -34,7 +34,7 @@ validator:
       filePath: /wallet
 
   wallet:
-    volumeName: "wallet-volume"
+    volumeName: "walletvolume"
     directory: "/wallet"
     password: "<pass-as-parameter>"
     passwordFilePath: "/wallet-password"
