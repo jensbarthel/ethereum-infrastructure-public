@@ -34,12 +34,12 @@ validator:
       filePath: /wallet
 
   wallet:
-    walletVolumeName: "wallet-volume"
-    walletDirectory: "/wallet"
-    walletPassword: "<pass-as-parameter>"
-    walletPasswordFilePath: "/wallet-password"
-    walletSecretVolumeName: "wallet-password"
-    walletSecretName: "wallet-password"
+    volumeName: "wallet-volume"
+    directory: "/wallet"
+    password: "<pass-as-parameter>"
+    passwordFilePath: "/wallet-password"
+    secretVolumeName: "wallet-password"
+    secretName: "wallet-password"
     awsS3Init:
       awsRegion: "us-east-1"
       accessKeyId: "<pass-as-parameter>"
