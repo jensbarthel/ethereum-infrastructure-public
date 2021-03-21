@@ -41,7 +41,7 @@ spec:
           image: busybox
           volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
-          args: [ "echo {{.Values.validator.webUi.passwordHash.secretValue}} > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
+          args: [ "echo '{{ .Values.validator.webUi.passwordHash.secretValue }}' > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
       {{ end }}
 
       containers:
