@@ -22,15 +22,16 @@ ports:
 graffiti: ""
 useTestnet: true
 
-wallet:
-  walletVolumeName: "wallet-volume"
-  walletDirectory: "/wallet"
-  walletPassword: "<pass-as-parameter>"
-  walletPasswordFilePath: "/wallet-password"
-  walletSecretSubPath: "wallet-password"
-  awsS3Init:
-    awsRegion: "us-east-1"
-    accessKeyId: "<pass-as-parameter>"
-    secretAccessKey: "<pass-as-parameter>"
-    walletPath: "<pass-as-parameter>"
-    walletFileName: "wallet.tar.gz"
+validator:
+  wallet:
+    walletVolumeName: "wallet-volume"
+    walletDirectory: "/wallet"
+    walletPassword: "<pass-as-parameter>"
+    walletPasswordFilePath: "/wallet-password"
+    walletSecretSubPath: "wallet-password"
+    awsS3Init:
+      awsRegion: "us-east-1"
+      accessKeyId: "<pass-as-parameter>"
+      secretAccessKey: "<pass-as-parameter>"
+      walletPath: "<pass-as-parameter>"
+      walletFileName: "wallet.tar.gz"

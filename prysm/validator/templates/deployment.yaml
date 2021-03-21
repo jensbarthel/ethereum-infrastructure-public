@@ -18,23 +18,23 @@ spec:
         - name: wallet-password
           secret:
             secretName: {{ include "validator.fullname" . }}
-        - name: {{ .Values.wallet.walletVolumeName }}
+        - name: {{ .Values.validator.wallet.walletVolumeName }}
           emptyDir: { }
       initContainers:
         - name: "aws-cli"
           image: "amazon/aws-cli"
-          volumeMounts: [ { name: {{ .Values.wallet.walletVolumeName }}, mountPath: {{ .Values.wallet.walletDirectory }} } ]
+          volumeMounts: [ { name: {{ .Values.validator.wallet.walletVolumeName }}, mountPath: {{ .Values.validator.wallet.walletDirectory }} } ]
           env:
-            - { name: AWS_DEFAULT_REGION, value: "{{ .Values.wallet.awsS3Init.awsRegion }}" }
-            - { name: AWS_ACCESS_KEY_ID, value: "{{ .Values.wallet.awsS3Init.accessKeyId }}" }
-            - { name: AWS_SECRET_ACCESS_KEY, value: "{{ .Values.wallet.awsS3Init.secretAccessKey }}" }
+            - { name: AWS_DEFAULT_REGION, value: "{{ .Values.validator.wallet.awsS3Init.awsRegion }}" }
+            - { name: AWS_ACCESS_KEY_ID, value: "{{ .Values.validator.wallet.awsS3Init.accessKeyId }}" }
+            - { name: AWS_SECRET_ACCESS_KEY, value: "{{ .Values.validator.wallet.awsS3Init.secretAccessKey }}" }
           command: [ "/bin/sh", "-c" ]
-          args: ["aws s3 cp {{ .Values.wallet.awsS3Init.walletPath }} {{ .Values.wallet.walletDirectory }}/{{ .Values.wallet.awsS3Init.walletFileName }}"]
+          args: ["aws s3 cp {{ .Values.validator.wallet.awsS3Init.walletPath }} {{ .Values.validator.wallet.walletDirectory }}/{{ .Values.validator.wallet.awsS3Init.walletFileName }}"]
         - name: "alpine"
           image: "alpine"
-          volumeMounts: [ { name: {{ .Values.wallet.walletVolumeName }}, mountPath: {{ .Values.wallet.walletDirectory }} } ]
+          volumeMounts: [ { name: {{ .Values.validator.wallet.walletVolumeName }}, mountPath: {{ .Values.validator.wallet.walletDirectory }} } ]
           command: [ "/bin/sh", "-c" ]
-          args: ["cd {{ .Values.wallet.walletDirectory }} && tar -xzpf {{ .Values.wallet.awsS3Init.walletFileName }} && rm {{ .Values.wallet.awsS3Init.walletFileName }}"]
+          args: ["cd {{ .Values.validator.wallet.walletDirectory }} && tar -xzpf {{ .Values.validator.wallet.awsS3Init.walletFileName }} && rm {{ .Values.validator.wallet.awsS3Init.walletFileName }}"]
 
       containers:
         - name: {{ .Chart.Name }}
@@ -47,8 +47,8 @@ spec:
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           args:
             - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"
-            - "--wallet-dir={{ .Values.wallet.walletDirectory }}"
-            - "--wallet-password-file={{ .Values.wallet.walletPasswordFilePath }}"
+            - "--wallet-dir={{ .Values.validator.wallet.walletDirectory }}"
+            - "--wallet-password-file={{ .Values.validator.wallet.walletPasswordFilePath }}"
             - "--graffiti={{ .Values.graffiti }}"
             - "--monitoring-host=0.0.0.0"
             - "--monitoring-port={{ .Values.ports.metrics }}"
@@ -61,10 +61,10 @@ spec:
 
           volumeMounts:
             - name: wallet-password
-              mountPath: {{ .Values.wallet.walletPasswordFilePath }}
-              subPath: {{ .Values.wallet.walletSecretSubPath}}
-            - name: {{ .Values.wallet.walletVolumeName }}
-              mountPath: {{ .Values.wallet.walletDirectory }}
+              mountPath: {{ .Values.validator.wallet.walletPasswordFilePath }}
+              subPath: {{ .Values.validator.wallet.walletSecretSubPath}}
+            - name: {{ .Values.validator.wallet.walletVolumeName }}
+              mountPath: {{ .Values.validator.wallet.walletDirectory }}
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthEndpoint }}
