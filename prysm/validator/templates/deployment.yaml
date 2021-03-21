@@ -18,13 +18,13 @@ spec:
         - name: {{ .Values.validator.wallet.secretVolumeName }}
           secret:
             secretName: {{ include "validator.fullname" . }}
-        - name: {{ .Values.validator.wallet.volumeName }}
+        - name: horst
           emptyDir: { }
 
       initContainers:
         - name: "download-wallet"
           image: "amazon/aws-cli"
-          volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
+          volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
           env:
             - { name: AWS_DEFAULT_REGION, value: "{{ .Values.validator.wallet.awsS3Init.awsRegion }}" }
             - { name: AWS_ACCESS_KEY_ID, value: "{{ .Values.validator.wallet.awsS3Init.accessKeyId }}" }
@@ -33,7 +33,7 @@ spec:
           args: [ "aws s3 cp {{ .Values.validator.wallet.awsS3Init.walletPath }} {{ .Values.validator.wallet.directory }}/{{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         - name: "untar-wallet"
           image: "alpine"
-          volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
+          volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
           args: [ "cd {{ .Values.validator.wallet.directory }} && tar -xzpf {{ .Values.validator.wallet.awsS3Init.walletFileName }} && rm {{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         {{ if .Values.validator.webUi.activateWebUi }}
@@ -75,7 +75,7 @@ spec:
             - name: {{ .Values.validator.wallet.secretVolumeName }}
               mountPath: {{ .Values.validator.wallet.passwordFilePath }}
               subPath: {{ .Values.validator.wallet.secretName }}
-            - name: {{ .Values.validator.wallet.volumeName }}
+            - name: horst
               mountPath: {{ .Values.validator.wallet.directory }}
           livenessProbe:
             httpGet:
