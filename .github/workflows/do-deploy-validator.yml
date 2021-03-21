@@ -49,7 +49,7 @@ jobs:
             --namespace ${ETHEREUM_NAMESPACE} \
             -f prysm/validator/values.yaml \
             --set validator.wallet.walletPassword=${{ secrets.PRYSM_VALIDATOR_WALLET_PASSWORD }} \
-            --set validator.webUi.passwordHash=${{ secrets.PRYSM_VALIDATOR_UI_PASSWORD_HASH }} \
+            --set validator.webUi.passwordHash.secretValue=${{ secrets.PRYSM_VALIDATOR_UI_PASSWORD_HASH }} \
             --set validator.wallet.awsS3Init.accessKeyId=${{ secrets.AWS_ACCESS_KEY_ID }} \
             --set validator.wallet.awsS3Init.secretAccessKey=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
             --set validator.wallet.awsS3Init.walletPath=${{ secrets.PRYSM_VALIDATOR_WALLET_S3_PATH }} \
