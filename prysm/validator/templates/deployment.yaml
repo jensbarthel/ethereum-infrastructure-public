@@ -41,7 +41,7 @@ spec:
           {{ if not .Values.deployment.image.useDebug }}
           image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.stableTag }}
           {{ else }}
-          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.stableTag }}
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.debugTag }}
           {{ end }}
 
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
