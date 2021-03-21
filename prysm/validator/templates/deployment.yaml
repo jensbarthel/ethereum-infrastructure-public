@@ -72,11 +72,11 @@ spec:
             {{- end }}
 
           volumeMounts:
-            - name: {{ .Values.validator.wallet.volumeName }}
-              mountPath: {{ .Values.validator.wallet.directory }}
             - name: {{ .Values.validator.wallet.secretVolumeName }}
               mountPath: {{ .Values.validator.wallet.passwordFilePath }}
               subPath: {{ .Values.validator.wallet.secretName }}
+            - name: {{ .Values.validator.wallet.volumeName }}
+              mountPath: {{ .Values.validator.wallet.directory }}
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthEndpoint }}
