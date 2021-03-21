@@ -32,13 +32,14 @@ spec:
           command: [ "/bin/sh", "-c" ]
           args: [ "aws s3 cp {{ .Values.validator.wallet.awsS3Init.walletPath }} {{ .Values.validator.wallet.directory }}/{{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         - name: "untar-wallet"
-          image: alpine
+          image: busybox
           volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
           args: [ "cd {{ .Values.validator.wallet.directory }} && tar -xzpf {{ .Values.validator.wallet.awsS3Init.walletFileName }} && rm {{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         {{ if .Values.validator.webUi.activateWebUi }}
         - name: "set-ui-pwhash"
-          image: alpine
+          image: busybox
+          volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
           env:
             - name: UI_PASSWORD_HASH
               valueFrom:
@@ -46,7 +47,7 @@ spec:
                   name: {{ include "validator.fullname" . }}
                   key: "{{ .Values.validator.webUi.passwordHash.secretKey }}"
           command: [ "/bin/sh", "-c" ]
-          args: [ "cd {{ .Values.validator.wallet.directory }} &&  echo horst > {{.Values.validator.webUi.passwordHash.fileName}}" ]
+          args: [ "echo ${UI_PASSWORD_HASH} > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
         {{ end }}
 
       containers:
