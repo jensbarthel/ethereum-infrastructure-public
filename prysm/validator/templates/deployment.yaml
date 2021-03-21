@@ -67,9 +67,6 @@ spec:
             - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
               mountPath: {{ .Values.validator.wallet.walletPasswordFilePath }}
               subPath: {{ .Values.validator.wallet.walletSecretSubPath}}
-            - name: {{ .Values.validator.wallet.walletSecretVolumeName }}
-              mountPath: {{ .Values.validator.wallet.walletDirectory }}
-              subPath: {{ .Values.validator.wallet.walletSecretSubPath}}
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthEndpoint }}
