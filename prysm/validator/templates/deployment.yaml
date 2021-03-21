@@ -47,6 +47,8 @@ spec:
             - "--graffiti={{ .Values.graffiti }}"
             - "--monitoring-host=0.0.0.0"
             - "--monitoring-port={{ .Values.ports.metrics }}"
+            - "--web"
+            - "--grpc-gateway-host=0.0.0.0"
             - "--accept-terms-of-use"
             {{- if .Values.useTestnet}}
             - "--pyrmont"
