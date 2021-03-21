@@ -32,13 +32,13 @@ spec:
           command: [ "/bin/sh", "-c" ]
           args: [ "aws s3 cp {{ .Values.validator.wallet.awsS3Init.walletPath }} {{ .Values.validator.wallet.directory }}/{{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         - name: "untar-wallet"
-          image: "alpine"
+          image: alpine
           volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
           args: [ "cd {{ .Values.validator.wallet.directory }} && tar -xzpf {{ .Values.validator.wallet.awsS3Init.walletFileName }} && rm {{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
         {{ if .Values.validator.webUi.activateWebUi }}
         - name: "set-ui-pwhash"
-          image: busybox
+          image: alpine
           env:
             - name: UI_PASSWORD_HASH
               valueFrom:
