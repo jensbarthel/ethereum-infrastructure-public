@@ -40,15 +40,9 @@ spec:
         - name: "set-ui-pwhash"
           image: busybox
           volumeMounts: [ { name: horst, mountPath: {{ .Values.validator.wallet.directory }} } ]
-{{/*          env:*/}}
-{{/*            - name: UI_PASSWORD_HASH*/}}
-{{/*              valueFrom:*/}}
-{{/*                secretKeyRef:*/}}
-{{/*                  name: {{ include "validator.fullname" . }}*/}}
-{{/*                  key: "{{ .Values.validator.webUi.passwordHash.secretKey }}"*/}}
           command: [ "/bin/sh", "-c" ]
-          args: [ "echo ${foo} > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
-        {{ end }}
+          args: [ "echo {{.Values.validator.webUi.passwordHash.secretValue}} > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
+      {{ end }}
 
       containers:
         - name: {{ .Chart.Name }}
@@ -73,7 +67,7 @@ spec:
             {{- end }}
             {{- if .Values.validator.useTestnet }}
             - "--pyrmont"
-            {{- end }}
+          {{- end }}
 
           volumeMounts:
             - name: {{ .Values.validator.wallet.secretVolumeName }}
