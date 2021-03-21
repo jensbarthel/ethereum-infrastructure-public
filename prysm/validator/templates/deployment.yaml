@@ -20,8 +20,9 @@ spec:
             secretName: {{ include "validator.fullname" . }}
         - name: {{ .Values.validator.wallet.volumeName }}
           emptyDir: { }
+
       initContainers:
-        - name: "aws-cli"
+        - name: "download-wallet"
           image: "amazon/aws-cli"
           volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
           env:
@@ -29,12 +30,21 @@ spec:
             - { name: AWS_ACCESS_KEY_ID, value: "{{ .Values.validator.wallet.awsS3Init.accessKeyId }}" }
             - { name: AWS_SECRET_ACCESS_KEY, value: "{{ .Values.validator.wallet.awsS3Init.secretAccessKey }}" }
           command: [ "/bin/sh", "-c" ]
-          args: ["aws s3 cp {{ .Values.validator.wallet.awsS3Init.walletPath }} {{ .Values.validator.wallet.directory }}/{{ .Values.validator.wallet.awsS3Init.walletFileName }}"]
-        - name: "alpine"
+          args: [ "aws s3 cp {{ .Values.validator.wallet.awsS3Init.walletPath }} {{ .Values.validator.wallet.directory }}/{{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
+        - name: "untar-wallet"
           image: "alpine"
           volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
-          args: ["cd {{ .Values.validator.wallet.directory }} && tar -xzpf {{ .Values.validator.wallet.awsS3Init.walletFileName }} && rm {{ .Values.validator.wallet.awsS3Init.walletFileName }}"]
+          args: [ "cd {{ .Values.validator.wallet.directory }} && tar -xzpf {{ .Values.validator.wallet.awsS3Init.walletFileName }} && rm {{ .Values.validator.wallet.awsS3Init.walletFileName }}" ]
+        {{ if .Values.validator.webUi.activateWebUi }}
+        - name: "set-ui-pwhash"
+          image: busybox
+          env:
+            - name: UI_PASSWORD_HASH
+              valueFrom: { secretKeyRef: { name: {{ include "validator.fullname" . }}, key: "{{ .Values.validator.webUi.passwordHash.secretValue }}" } }
+          command: [ "/bin/sh", "-c" ]
+          args: [ "echo ${UI_PASSWORD_HASH} > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
+        {{ end }}
 
       containers:
         - name: {{ .Chart.Name }}
