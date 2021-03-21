@@ -6,7 +6,9 @@ deployment:
   image:
     repository: "gcr.io/prysmaticlabs/prysm/validator"
     pullPolicy: Always
-    tag: "stable"
+    useDebug: false
+    stableTag: "stable"
+    debugTag: "latest-debug"
 
   healthEndpoint: "/healthz"
   configDir: "/config"

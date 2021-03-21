@@ -38,7 +38,12 @@ spec:
 
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          {{ if not .Values.deployment.image.useDebug }}
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.stableTag }}
+          {{ else }}
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.stableTag }}
+          {{ end }}
+
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           args:
             - "--beacon-rpc-provider={{ .Values.deployment.beaconNode }}:4000"
