@@ -41,7 +41,10 @@ spec:
           image: busybox
           env:
             - name: UI_PASSWORD_HASH
-              valueFrom: { secretKeyRef: { name: {{ include "validator.fullname" . }}, key: "{{ .Values.validator.webUi.passwordHash.secretValue }}" } }
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "validator.fullname" . }}
+                  key: "{{ .Values.validator.webUi.passwordHash.secretKey }}"
           command: [ "/bin/sh", "-c" ]
           args: [ "echo ${UI_PASSWORD_HASH} > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
         {{ end }}

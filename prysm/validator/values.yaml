@@ -28,7 +28,7 @@ validator:
   webUi:
     activateWebUi: true
     passwordHash:
-      secretName: webUiPasswordHash
+      secretKey: webUiPasswordHash
       secretValue: "<pass-as-parameter>"
       fileName: rpc-password-hash
       filePath: /wallet
