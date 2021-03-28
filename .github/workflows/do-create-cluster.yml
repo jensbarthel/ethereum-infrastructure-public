@@ -5,7 +5,7 @@ on:
     inputs:
       stage:
         description: "Stage descriptor [qa|prod]"
-        required: false
+        required: true
         default: qa
 
 env:
