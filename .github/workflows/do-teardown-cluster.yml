@@ -16,12 +16,10 @@ jobs:
         run: |
           if [ ${{ github.event.inputs.stage }} = "qa" ]; then
             echo "Setting qa environment"
-            export STAGE=qa
-            export CLUSTER_NAME=elmo
+            echo "CLUSTER_NAME=elmo" >> $GITHUB_ENV
           elif [ ${{ github.event.inputs.stage }} = "prod" ]; then
             echo "Setting prod environment"
-            export STAGE=prod
-            export CLUSTER_NAME=kermit
+            echo "CLUSTER_NAME=kermit" >> $GITHUB_ENV
           else
             echo "Stage ${{ github.event.inputs.stage }} does not match [qa|prod]"
             exit 1
