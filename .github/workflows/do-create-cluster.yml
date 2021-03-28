@@ -1,19 +1,39 @@
 name: Create-DO-Cluster
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Stage descriptor [qa|prod]"
+        required: false
+        default: qa
 
 env:
-  CLUSTER_NAME: elmo
   K8S_VERSION: 1.20.2-do.0
   ETHEREUM_NAMESPACE: ethereum
   INGRESS_NAMESPACE: nginx-ingress
   CERT_MANAGER_NAMESPACE: cert-manager
-  STAGE: qa
+
 jobs:
   create-cluster:
     name: Create the Digital Ocean cluster
     runs-on: ubuntu-latest
     steps:
+
+      - name: Set the stage
+        run: |
+          if [ ${{ github.event.inputs.stage }} = "qa" ]; then
+            export STAGE=qa
+            export CLUSTER_NAME=elmo
+          elif [ ${{ github.event.inputs.stage }} = "prod" ]; then
+            export STAGE=prod
+            export CLUSTER_NAME=kermit
+          else
+            echo "Stage ${{ github.event.inputs.stage }} does not match [qa|prod]"
+            exit 1
+          fi
+
+
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
