@@ -42,7 +42,7 @@ spec:
           volumeMounts: [ { name: {{ .Values.validator.wallet.volumeName }}, mountPath: {{ .Values.validator.wallet.directory }} } ]
           command: [ "/bin/sh", "-c" ]
           args: [ "echo '{{ .Values.validator.webUi.passwordHash.secretValue }}' > {{ .Values.validator.wallet.directory }}/{{.Values.validator.webUi.passwordHash.fileName}}" ]
-      {{ end }}
+        {{ end }}
 
       containers:
         - name: {{ .Chart.Name }}
