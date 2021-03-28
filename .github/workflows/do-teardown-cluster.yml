@@ -1,19 +1,37 @@
 name: Teardown-DO-Cluster
 
-on: workflow_dispatch
-
-env:
-  CLUSTER_NAME: elmo
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Stage descriptor [qa|prod]"
+        required: true
 
 jobs:
   create-cluster:
     name: Destroy the Digital Ocean cluster
     runs-on: ubuntu-latest
     steps:
+      - name: Set the stage
+        run: |
+          if [ ${{ github.event.inputs.stage }} = "qa" ]; then
+            echo "Setting qa environment"
+            export STAGE=qa
+            export CLUSTER_NAME=elmo
+          elif [ ${{ github.event.inputs.stage }} = "prod" ]; then
+            echo "Setting prod environment"
+            export STAGE=prod
+            export CLUSTER_NAME=kermit
+          else
+            echo "Stage ${{ github.event.inputs.stage }} does not match [qa|prod]"
+            exit 1
+          fi
+
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
+
       - name: Destroy cluster
         run: |
           doctl kubernetes cluster delete ${CLUSTER_NAME} \
