@@ -26,10 +26,12 @@ jobs:
             echo "Setting qa environment"
             echo "STAGE=qa" >> $GITHUB_ENV
             echo "CLUSTER_NAME=elmo" >> $GITHUB_ENV
+            echo "NODE_COUNT=1" >> $GITHUB_ENV
           elif [ ${{ github.event.inputs.stage }} = "prod" ]; then
             echo "Setting prod environment"
             echo "STAGE=prod" >> $GITHUB_ENV
             echo "CLUSTER_NAME=kermit" >> $GITHUB_ENV
+            echo "NODE_COUNT=1" >> $GITHUB_ENV
           else
             echo "Stage ${{ github.event.inputs.stage }} does not match [qa|prod]"
             exit 1
@@ -45,7 +47,7 @@ jobs:
           if ! $(doctl kubernetes cluster get ${CLUSTER_NAME} &> /dev/null); then
             echo "Creating cluster ${CLUSTER_NAME}"
             doctl kubernetes cluster create ${CLUSTER_NAME} \
-                        --node-pool "name=${CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=2" \
+                        --node-pool "name=${CLUSTER_NAME}-nodepool;size=s-4vcpu-8gb;count=${NODE_COUNT}" \
                         --region fra1 \
                         --version ${K8S_VERSION} \
                         --wait
