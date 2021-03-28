@@ -57,7 +57,7 @@ grafana:
     adminPasswordName: "adminPassword"
     adminPasswordValue: "overwrite-me"
   ingress:
-    hostUrl: "eth2.sigdevops.io"
+    hostUrl: "qa.eth2.sigdevops.io"
     backendPath: "/"
     clusterIssuer: cluster-issuer-cert-manager-resources-qa
 
