@@ -23,9 +23,11 @@ jobs:
       - name: Set the stage
         run: |
           if [ ${{ github.event.inputs.stage }} = "qa" ]; then
+            echo "Setting qa environment"
             export STAGE=qa
             export CLUSTER_NAME=elmo
           elif [ ${{ github.event.inputs.stage }} = "prod" ]; then
+            echo "Setting prod environment"
             export STAGE=prod
             export CLUSTER_NAME=kermit
           else
