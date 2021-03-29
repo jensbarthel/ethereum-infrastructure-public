@@ -11,10 +11,6 @@ deployment:
     debugTag: "latest-debug"
 
   healthEndpoint: "/healthz"
-  configDir: "/config"
-  configName: "validator.yaml"
-
-  beaconNode: beacon-node-grcp
 
 ports:
   metrics: 8080
@@ -24,6 +20,7 @@ ports:
 validator:
   useTestnet: true
   graffiti: ""
+  beaconNode: beacon-node-grcp
 
   webUi:
     activateWebUi: true
