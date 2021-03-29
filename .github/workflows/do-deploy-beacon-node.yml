@@ -2,7 +2,10 @@ name: Deploy-DO-Beacon-Node
 
 on:
   workflow_dispatch:
-
+    inputs:
+      stage:
+        description: "Stage descriptor [qa|prod]"
+        required: true
 env:
   ETHEREUM_NAMESPACE: ethereum
 
