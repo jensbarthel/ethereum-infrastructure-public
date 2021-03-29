@@ -20,7 +20,7 @@ ports:
 validator:
   useTestnet: true
   graffiti: ""
-  beaconNode: "beacon-node-grcp:4000"
+  beaconNode: beacon-node-grcp
 
   webUi:
     activateWebUi: true

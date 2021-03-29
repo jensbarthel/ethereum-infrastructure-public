@@ -54,7 +54,7 @@ spec:
 
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           args:
-            - "--beacon-rpc-provider={{ .Values.validator.beaconNode }}"
+            - "--beacon-rpc-provider={{ .Values.validator.beaconNode }}:4000"
             - "--accept-terms-of-use"
             - "--wallet-dir={{ .Values.validator.wallet.directory }}"
             - "--wallet-password-file={{ .Values.validator.wallet.passwordFilePath }}"
