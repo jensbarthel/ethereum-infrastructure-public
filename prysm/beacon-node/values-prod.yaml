@@ -1,0 +1,4 @@
+beaconNode:
+  isTestNet: false
+  deployment:
+    replicaCount: 1

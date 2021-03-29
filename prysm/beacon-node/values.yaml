@@ -2,11 +2,11 @@ nameOverride: ""
 fullnameOverride: ""
 
 beaconNode:
-  isTestNet: true
-  web3HttpProvider: "https://goerli.prylabs.net"
+  isTestNet: "<set-in-stage-specific-charts>"
+  web3HttpProvider: "<pass-as-parameter>"
   p2pHostDns: ""
   deployment:
-    replicaCount: 2
+    replicaCount: "<set-in-stage-specific-charts>"
     podSecurityContext:
       runAsUser: 101
       runAsGroup: 101
