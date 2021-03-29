@@ -6,7 +6,6 @@ on:
       stage:
         description: "Stage descriptor [qa|prod]"
         required: true
-        default: qa
 
 env:
   K8S_VERSION: 1.20.2-do.0
