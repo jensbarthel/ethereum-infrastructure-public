@@ -1,4 +1,4 @@
-name: Deploy-DO-Beacon-Node
+name: Deploy-DO-Prysm
 
 on:
   workflow_dispatch:
@@ -37,34 +37,34 @@ jobs:
             exit 1
           fi
 
-      - name: Mask secret vars
-        run: |
-          echo "::add-mask::$INFURA_ENDPOINT"
-
-      - name: Checkout code base
-        uses: actions/checkout@v2
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
-
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v1
-
-      - name: Install helm
-        uses: azure/setup-helm@v1
-
-      - name: Create kubeconfig
-        run: |
-          doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
-
-      - name: Install beacon node
-        run: |
-          helm upgrade beacon-node prysm/beacon-node \
-            -i \
-            --namespace ${ETHEREUM_NAMESPACE} \
-            -f prysm/beacon-node/values.yaml \
-            -f prysm/beacon-node/values-${STAGE}.yaml \
-            --set beaconNode.web3HttpProvider=${INFURA_ENDPOINT} \
-            --debug
+#      - name: Mask secret vars
+#        run: |
+#          echo "::add-mask::$INFURA_ENDPOINT"
+#
+#      - name: Checkout code base
+#        uses: actions/checkout@v2
+#
+#      - name: Install doctl
+#        uses: digitalocean/action-doctl@v2
+#        with:
+#          token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
+#
+#      - name: Install kubectl
+#        uses: azure/setup-kubectl@v1
+#
+#      - name: Install helm
+#        uses: azure/setup-helm@v1
+#
+#      - name: Create kubeconfig
+#        run: |
+#          doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
+#
+#      - name: Install beacon node
+#        run: |
+#          helm upgrade beacon-node prysm/beacon-node \
+#            -i \
+#            --namespace ${ETHEREUM_NAMESPACE} \
+#            -f prysm/beacon-node/values.yaml \
+#            -f prysm/beacon-node/values-${STAGE}.yaml \
+#            --set beaconNode.web3HttpProvider=${INFURA_ENDPOINT} \
+#            --debug
