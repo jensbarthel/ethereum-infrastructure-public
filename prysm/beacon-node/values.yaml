@@ -21,7 +21,7 @@ beaconNode:
     nodeConfigName: "beacon.yaml"
   data:
     dir: "/data"
-    pvcSize: 20Gi
+    pvcSize: 80Gi
     pvcTemplateName: node-data-pvc
 
 stats:
