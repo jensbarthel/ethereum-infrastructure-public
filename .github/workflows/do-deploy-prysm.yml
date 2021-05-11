@@ -1,0 +1,70 @@
+name: Deploy-DO-Beacon-Node
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Stage descriptor [qa|prod]"
+        required: true
+env:
+  ETHEREUM_NAMESPACE: ethereum
+
+jobs:
+  set-stage:
+    name: Setup stage specific environment variables
+    runs-on: ubuntu-latest
+
+
+  deploy-node:
+    name: Deploy beacon node to Digital Ocean
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set the stage
+        run: |
+          if [ ${{ github.event.inputs.stage }} = "qa" ]; then
+            echo "Setting qa environment"
+            echo "STAGE=qa" >> $GITHUB_ENV
+            echo "CLUSTER_NAME=elmo" >> $GITHUB_ENV
+            echo "INFURA_ENDPOINT=${{ secrets.INFURA_GOERLI_GETH_ENDPOINT }}" >> $GITHUB_ENV
+          elif [ ${{ github.event.inputs.stage }} = "prod" ]; then
+            echo "Setting prod environment"
+            echo "STAGE=prod" >> $GITHUB_ENV
+            echo "CLUSTER_NAME=kermit" >> $GITHUB_ENV
+            echo "INFURA_ENDPOINT=${{ secrets.INFURA_MAINNET_GETH_ENDPOINT }}" >> $GITHUB_ENV
+          else
+            echo "Stage ${{ github.event.inputs.stage }} does not match [qa|prod]"
+            exit 1
+          fi
+
+      - name: Mask secret vars
+        run: |
+          echo "::add-mask::$INFURA_ENDPOINT"
+
+      - name: Checkout code base
+        uses: actions/checkout@v2
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITAL_OCEAN_API_TOKEN }}
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v1
+
+      - name: Install helm
+        uses: azure/setup-helm@v1
+
+      - name: Create kubeconfig
+        run: |
+          doctl kubernetes cluster kubeconfig save ${CLUSTER_NAME}
+
+      - name: Install beacon node
+        run: |
+          helm upgrade beacon-node prysm/beacon-node \
+            -i \
+            --namespace ${ETHEREUM_NAMESPACE} \
+            -f prysm/beacon-node/values.yaml \
+            -f prysm/beacon-node/values-${STAGE}.yaml \
+            --set beaconNode.web3HttpProvider=${INFURA_ENDPOINT} \
+            --debug
