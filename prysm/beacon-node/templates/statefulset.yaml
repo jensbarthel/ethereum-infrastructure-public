@@ -22,7 +22,6 @@ spec:
           name: {{ include "beacon-node.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
-          image: {{ .Values.beaconNode.deployment.image.repository }}:{{ .Values.beaconNode.deployment.image.tag }}
           {{ if not .Values.beaconNode.deployment.image.useDebug }}
           image: {{ .Values.beaconNode.deployment.image.repository }}:{{ .Values.beaconNode.deployment.image.tag }}
           {{ else }}
