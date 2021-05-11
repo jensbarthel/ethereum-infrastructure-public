@@ -23,6 +23,11 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: {{ .Values.beaconNode.deployment.image.repository }}:{{ .Values.beaconNode.deployment.image.tag }}
+          {{ if not .Values.beaconNode.deployment.image.useDebug }}
+          image: {{ .Values.beaconNode.deployment.image.repository }}:{{ .Values.beaconNode.deployment.image.tag }}
+          {{ else }}
+          image: {{ .Values.beaconNode.deployment.image.repository }}:{{ .Values.beaconNode.deployment.image.debugTag }}
+          {{ end }}
           args:
             - "--config-file={{ .Values.beaconNode.deployment.nodeConfigDir }}/{{ .Values.beaconNode.deployment.nodeConfigName }}"
             - "--accept-terms-of-use"

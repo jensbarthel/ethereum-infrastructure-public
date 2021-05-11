@@ -6,6 +6,9 @@ on:
       stage:
         description: "Stage descriptor [qa|prod]"
         required: true
+      useDebug:
+        description: Deploy latest images in debug mode
+        default: false
 env:
   ETHEREUM_NAMESPACE: ethereum
 
@@ -62,4 +65,5 @@ jobs:
             -f prysm/beacon-node/values.yaml \
             -f prysm/beacon-node/values-${STAGE}.yaml \
             --set beaconNode.web3HttpProvider=${INFURA_ENDPOINT} \
+            --set beaconNode.deployment.image.useDebug=${{ github.event.inputs.useDebug }} \
             --debug
